@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Informe Médico Pediátrico</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      font-size: 11pt;
+      color: #1a1a1a;
+      padding: 32px 40px;
+      line-height: 1.55;
+    }
+    /* ── Header ── */
+    .report-header {
+      border-bottom: 2px solid #1a1a1a;
+      padding-bottom: 12px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+    .report-header .title { font-size: 16pt; font-weight: 700; }
+    .report-header .meta  { font-size: 9pt; color: #555; text-align: right; }
+
+    /* ── Sections ── */
+    .section { margin-bottom: 24px; }
+    .section-title {
+      font-size: 12pt; font-weight: 700;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 4px;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    p { margin-bottom: 6px; }
+
+    /* ── Tables ── */
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 10pt; }
+    th {
+      background: #f0f0f0; font-weight: 700;
+      padding: 5px 8px; border: 1px solid #ccc; text-align: center;
+    }
+    td { padding: 5px 8px; border: 1px solid #ccc; text-align: center; }
+    td.label { text-align: left; font-weight: 600; }
+
+    /* ── Ear grid ── */
+    .ear-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .ear-block .ear-title { font-weight: 700; margin-bottom: 4px; font-size: 10pt; }
+
+    /* ── Ling ── */
+    .heard    { color: #1a7a1a; font-weight: 700; }
+    .not-heard{ color: #cc2200; font-weight: 700; }
+
+    /* ── COSI needs ── */
+    .cosi-need { padding: 4px 0; border-bottom: 1px dotted #ccc; }
+    .cosi-need:last-child { border-bottom: none; }
+
+    /* ── Conclusions / notes ── */
+    .pending-box {
+      border-left: 3px solid #c00;
+      padding: 6px 10px;
+      background: #fff5f5;
+      margin-top: 8px;
+      font-size: 10pt;
+    }
+
+    /* ── Footer / signature ── */
+    .final-notes-text { white-space: pre-wrap; font-size: 10pt; }
+    .closing-formula  { margin-top: 12px; font-style: italic; font-size: 10pt; }
+    .signature-block  {
+      margin-top: 32px; border-top: 1px solid #999;
+      padding-top: 8px; font-size: 10pt;
+    }
+
+    /* ── Print ── */
+    @media print {
+      body { padding: 0; }
+      .section { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HEADER ─────────────────────────────────────────── -->
+  <div class="report-header">
+    <div class="title">Informe Médico Pediátrico</div>
+    <div class="meta">
+      Generado: {{ generatedAt }}<br>
+      Paciente: {{ patientId }}
+    </div>
+  </div>
+
+  <!-- ── INTRODUCTION ───────────────────────────────────── -->
+  <div class="section">
+    <p>{{ introduction.greeting }},</p>
+    <p>Le remito el presente informe de valoración audiológica pediátrica.</p>
+  </div>
+
+  <!-- ── COLLABORATIVENESS ──────────────────────────────── -->
+  <div class="section">
+    <div class="section-title">Colaboración</div>
+    <p>{{ collaborativeness.sentence }}</p>
+  </div>
+
+  <!-- ── EAR ────────────────────────────────────────────── -->
+  {% if ear %}
+  <div class="section">
+    <div class="section-title">El Oído</div>
+
+    <div class="ear-grid">
+      {% if ear.left %}
+      <div class="ear-block">
+        <div class="ear-title">Oído Izquierdo</div>
+        <p><strong>Otoscopia:</strong> {{ ear.left.otoscopyLabel }}</p>
+        {% if ear.left.otoscopyImageUrl %}
+          <img src="{{ ear.left.otoscopyImageUrl }}" alt="Otoscopia izquierda" style="max-width:100%;margin:4px 0;">
+        {% endif %}
+        <p style="margin-top:8px"><strong>Timpanometría:</strong></p>
+        <table>
+          <tr><th>Tipo</th><th>Presión (daPa)</th></tr>
+          <tr>
+            <td>{{ ear.left.tympanometryLabel }}</td>
+            <td>{{ ear.left.tympanometryPressure }}</td>
+          </tr>
+        </table>
+        {% if ear.left.tympanometryImageUrl %}
+          <img src="{{ ear.left.tympanometryImageUrl }}" alt="Timpanometría izquierda" style="max-width:100%;margin:4px 0;">
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {% if ear.right %}
+      <div class="ear-block">
+        <div class="ear-title">Oído Derecho</div>
+        <p><strong>Otoscopia:</strong> {{ ear.right.otoscopyLabel }}</p>
+        {% if ear.right.otoscopyImageUrl %}
+          <img src="{{ ear.right.otoscopyImageUrl }}" alt="Otoscopia derecha" style="max-width:100%;margin:4px 0;">
+        {% endif %}
+        <p style="margin-top:8px"><strong>Timpanometría:</strong></p>
+        <table>
+          <tr><th>Tipo</th><th>Presión (daPa)</th></tr>
+          <tr>
+            <td>{{ ear.right.tympanometryLabel }}</td>
+            <td>{{ ear.right.tympanometryPressure }}</td>
+          </tr>
+        </table>
+        {% if ear.right.tympanometryImageUrl %}
+          <img src="{{ ear.right.tympanometryImageUrl }}" alt="Timpanometría derecha" style="max-width:100%;margin:4px 0;">
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- ── EVOKED POTENTIALS ──────────────────────────────── -->
+  {% if tests and tests.evokedPotentials %}
+  <div class="section">
+    <div class="section-title">Potenciales Evocados</div>
+    <p>{{ tests.evokedPotentials.standardText }}</p>
+    <p style="margin-top:8px">
+      <strong>Realización:</strong>
+      {{ tests.evokedPotentials.performerLabel }}
+      {% if tests.evokedPotentials.specialistDate %}
+        {{ tests.evokedPotentials.specialistDate }}
+      {% endif %}
+    </p>
+    <table style="margin-top:8px">
+      <tr>
+        <th></th>
+        {% if tests.evokedPotentials.left %}<th>Oído Izquierdo</th>{% endif %}
+        {% if tests.evokedPotentials.right %}<th>Oído Derecho</th>{% endif %}
+      </tr>
+      <tr>
+        <td class="label">Nivel (dB)</td>
+        {% if tests.evokedPotentials.left %}<td>{{ tests.evokedPotentials.left.db }} dB</td>{% endif %}
+        {% if tests.evokedPotentials.right %}<td>{{ tests.evokedPotentials.right.db }} dB</td>{% endif %}
+      </tr>
+      <tr>
+        <td class="label">Resultado</td>
+        {% if tests.evokedPotentials.left %}<td>{{ tests.evokedPotentials.left.passLabel }}</td>{% endif %}
+        {% if tests.evokedPotentials.right %}<td>{{ tests.evokedPotentials.right.passLabel }}</td>{% endif %}
+      </tr>
+    </table>
+  </div>
+  {% endif %}
+
+  <!-- ── LING TEST ───────────────────────────────────────── -->
+  {% if tests and tests.lingTest %}
+  <div class="section">
+    <div class="section-title">Test de Ling</div>
+    <p>{{ tests.lingTest.standardText }}</p>
+    <table style="margin-top:8px">
+      <tr>
+        <th>Sonido</th>
+        {% for dist in tests.lingTest.distances %}
+          <th>{{ dist }}</th>
+        {% endfor %}
+      </tr>
+      {% for row in tests.lingTest.rows %}
+      <tr>
+        <td class="label">{{ row.sound }}</td>
+        {% for cell in row.cells %}
+          <td>
+            {% if cell.heard %}
+              <span class="heard">✓</span>
+            {% elif cell.heard == false %}
+              <span class="not-heard">✗</span>
+            {% else %}
+              —
+            {% endif %}
+          </td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </table>
+    <p style="margin-top:6px;font-size:9pt;color:#555">
+      <span class="heard">✓</span> Escuchado &nbsp;&nbsp;
+      <span class="not-heard">✗</span> No escuchado
+    </p>
+  </div>
+  {% endif %}
+
+  <!-- ── QUESTIONNAIRE ──────────────────────────────────── -->
+  {% if questionnaire %}
+  <div class="section">
+    <div class="section-title">Cuestionario</div>
+    <p>{{ questionnaire.sentence }}</p>
+
+    {% if questionnaire.cosi %}
+      <p style="margin-top:6px"><strong>Sesión:</strong> {{ questionnaire.cosi.sessionDate }}</p>
+      <div style="margin-top:6px">
+        {% for need in questionnaire.cosi.needs %}
+          <div class="cosi-need">{{ loop.index }}. {{ need }}</div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p style="margin-top:6px">{{ questionnaire.notes }}</p>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <!-- ── FITTING ─────────────────────────────────────────── -->
+  {% if fitting %}
+  <div class="section">
+    <div class="section-title">Información de Adaptación</div>
+    <table>
+      <tr>
+        <th></th>
+        {% if fitting.left %}<th>Oído Izquierdo</th>{% endif %}
+        {% if fitting.right %}<th>Oído Derecho</th>{% endif %}
+      </tr>
+      <tr>
+        <td class="label">Tipo de audífono</td>
+        {% if fitting.left %}<td>{{ fitting.left.hearingAidLabel }}</td>{% endif %}
+        {% if fitting.right %}<td>{{ fitting.right.hearingAidLabel }}</td>{% endif %}
+      </tr>
+      <tr>
+        <td class="label">Código</td>
+        {% if fitting.left %}<td>{{ fitting.left.hearingAidCode }}</td>{% endif %}
+        {% if fitting.right %}<td>{{ fitting.right.hearingAidCode }}</td>{% endif %}
+      </tr>
+      {% if (fitting.left and fitting.left.earmoldLabel) or (fitting.right and fitting.right.earmoldLabel) %}
+      <tr>
+        <td class="label">Tipo de molde</td>
+        {% if fitting.left %}<td>{{ fitting.left.earmoldLabel or '—' }}</td>{% endif %}
+        {% if fitting.right %}<td>{{ fitting.right.earmoldLabel or '—' }}</td>{% endif %}
+      </tr>
+      <tr>
+        <td class="label">Código molde</td>
+        {% if fitting.left %}<td>{{ fitting.left.earmoldCode or '—' }}</td>{% endif %}
+        {% if fitting.right %}<td>{{ fitting.right.earmoldCode or '—' }}</td>{% endif %}
+      </tr>
+      {% endif %}
+      {% if (fitting.left and fitting.left.remRecdVerified) or (fitting.right and fitting.right.remRecdVerified) %}
+      <tr>
+        <td class="label">Verificación REM/RECD</td>
+        {% if fitting.left %}<td>{{ 'Sí' if fitting.left.remRecdVerified else '—' }}</td>{% endif %}
+        {% if fitting.right %}<td>{{ 'Sí' if fitting.right.remRecdVerified else '—' }}</td>{% endif %}
+      </tr>
+      {% endif %}
+    </table>
+  </div>
+  {% endif %}
+
+  <!-- ── CONCLUSIONS ────────────────────────────────────── -->
+  {% if conclusions %}
+  <div class="section">
+    <div class="section-title">Conclusiones</div>
+    <p>{{ conclusions.phrase }}</p>
+    {% if conclusions.pendingText %}
+      <div class="pending-box">{{ conclusions.pendingText }}</div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  <!-- ── FINAL NOTES ────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-title">Notas Finales</div>
+    <p class="final-notes-text">{{ finalNotes.text }}</p>
+    <p class="closing-formula">{{ finalNotes.closingFormula }}</p>
+    <div class="signature-block">
+      {{ finalNotes.signature }}<br>
+      <em>Especialista en audiología pediátrica</em>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Informe Médico Pediátrico — Demo</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, "Segoe UI", system-ui, sans-serif; font-size: 14px; background: #f5f6f8; color: #1f2328; min-height: 100vh; }
+
+.shell { max-width: 720px; margin: 0 auto; padding: 24px 16px 56px; }
+header { margin-bottom: 24px; }
+header h1 { font-size: 20px; font-weight: 700; }
+header p  { color: #57606a; font-size: 13px; margin-top: 2px; }
+
+/* ── Stepper ── */
+.stepper { display: flex; margin-bottom: 28px; overflow-x: auto; }
+.step-item { flex: 1; text-align: center; position: relative; min-width: 60px; }
+.step-item::after { content:''; position:absolute; top:14px; left:50%; width:100%; height:2px; background:#e5e7eb; z-index:0; }
+.step-item:last-child::after { display:none; }
+.step-dot { width:28px; height:28px; border-radius:50%; border:2px solid #e5e7eb; background:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; position:relative; z-index:1; color:#57606a; }
+.step-item.active .step-dot { background:#3b82d4; border-color:#3b82d4; color:#fff; }
+.step-item.done   .step-dot { background:#10b981; border-color:#10b981; color:#fff; }
+.step-item.done::after { background:#10b981; }
+.step-label { font-size:10px; color:#57606a; margin-top:4px; display:block; }
+.step-item.active .step-label { color:#3b82d4; font-weight:600; }
+
+/* ── Card ── */
+.card { background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:24px; margin-bottom:16px; }
+.card-title { font-size:15px; font-weight:700; margin-bottom:16px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.badge { font-size:10px; font-weight:600; padding:2px 7px; border-radius:10px; background:#fee2e2; color:#991b1b; }
+.badge.opt { background:#dbeafe; color:#1d4ed8; }
+
+/* ── Fields ── */
+.field { margin-bottom:14px; }
+.field label { display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px; }
+.field select, .field input[type=text], .field input[type=number], .field textarea {
+  width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:6px;
+  font-size:13px; font-family:inherit; background:#fff; color:#1f2328; transition:border-color .15s;
+}
+.field select:focus, .field input:focus, .field textarea:focus { outline:none; border-color:#3b82d4; box-shadow:0 0 0 3px rgba(59,130,212,.15); }
+.field textarea { resize:vertical; min-height:72px; }
+.field-row  { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.checkbox-label { display:flex; gap:6px; align-items:center; cursor:pointer; font-size:13px; margin-top:4px; }
+.checkbox-label input { width:15px; height:15px; cursor:pointer; }
+.hint { font-size:11px; color:#57606a; margin-top:3px; }
+
+/* ── Ear grid ── */
+.ear-cols { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.ear-col-title { font-size:12px; font-weight:700; text-align:center; padding:4px; background:#f7f8fa; border-radius:4px; margin-bottom:10px; }
+
+/* ── Ling ── */
+.ling-table { width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; }
+.ling-table th { background:#f7f8fa; padding:5px 8px; border:1px solid #e5e7eb; font-weight:600; text-align:center; }
+.ling-table td { padding:4px 8px; border:1px solid #e5e7eb; text-align:center; }
+.ling-table td.sound { font-weight:600; text-align:left; }
+
+/* ── Toggle ── */
+.toggle-section { border:1px solid #e5e7eb; border-radius:6px; overflow:hidden; margin-bottom:12px; }
+.toggle-header { display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:#f7f8fa; cursor:pointer; user-select:none; }
+.toggle-header span { font-size:13px; font-weight:600; }
+.toggle-arrow { transition:transform .2s; display:inline-block; }
+.toggle-header.open .toggle-arrow { transform:rotate(180deg); }
+.toggle-body { padding:14px; display:none; }
+.toggle-body.open { display:block; }
+
+/* ── Buttons ── */
+.btn-row { display:flex; gap:10px; justify-content:flex-end; margin-top:20px; align-items:center; }
+.btn { padding:9px 20px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; border:none; transition:opacity .15s, background .15s; }
+.btn:disabled { opacity:.4; cursor:not-allowed; }
+.btn-secondary { background:#f3f4f6; color:#374151; border:1px solid #d1d5db; }
+.btn-secondary:hover:not(:disabled) { background:#e5e7eb; }
+.btn-primary  { background:#3b82d4; color:#fff; }
+.btn-primary:hover:not(:disabled) { background:#2563af; }
+.btn-success  { background:#10b981; color:#fff; }
+.btn-success:hover:not(:disabled) { background:#059669; }
+.btn-danger   { background:#ef4444; color:#fff; }
+.btn-danger:hover:not(:disabled)  { background:#dc2626; }
+
+/* ── Validation hint ── */
+.val-hint { font-size:11px; color:#92400e; background:#fffbeb; border:1px solid #fde68a; border-radius:4px; padding:6px 10px; margin-top:8px; display:none; }
+.val-hint.show { display:block; }
+
+/* ── Alerts ── */
+.alert { padding:10px 14px; border-radius:6px; font-size:13px; margin-bottom:12px; }
+.alert-error { background:#fef2f2; border:1px solid #fecaca; color:#991b1b; }
+.alert-info  { background:#eff6ff; border:1px solid #bfdbfe; color:#1e40af; }
+
+/* ── COSI ── */
+.cosi-need label { font-size:11px; font-weight:600; color:#57606a; margin-bottom:3px; display:block; }
+.cosi-need { margin-bottom:8px; }
+</style>
+</head>
+<body>
+
+<!-- MAIN -->
+<div id="main-flow">
+<div class="shell">
+  <header>
+    <h1>Informe Médico Pediátrico</h1>
+    <p id="pro-label"></p>
+  </header>
+
+  <div class="stepper" id="stepper"></div>
+  <div id="global-error" class="alert alert-error" style="display:none"></div>
+  <div id="steps-container"></div>
+
+  <div class="btn-row">
+    <span id="val-hint" class="val-hint"></span>
+    <button class="btn btn-secondary" id="btn-back"   onclick="prevStep()">← Anterior</button>
+    <button class="btn btn-primary"   id="btn-next"   onclick="nextStep()">Siguiente →</button>
+    <button class="btn btn-secondary" id="btn-json"   style="display:none" onclick="submitReport('json')">Ver JSON</button>
+    <button class="btn btn-success"   id="btn-html"   style="display:none" onclick="submitReport('html')">Vista previa HTML</button>
+    <button class="btn btn-danger"    id="btn-pdf"    style="display:none" onclick="submitReport('pdf')">⬇ Descargar PDF</button>
+  </div>
+</div>
+</div>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════════════════════════════
+// STATE — persiste tutto il form tra i vari step
+// ═══════════════════════════════════════════════════════════════
+const STATE = {
+  recipientType: '',
+  doctorId: '',
+  hideName: false,
+
+  collaborativeness: '',
+
+  otoscopy_left: '', tympType_left: '', tympPressure_left: '',
+  otoscopy_right:'', tympType_right:'', tympPressure_right:'',
+
+  ep_include: false,
+  ep_performer: 'ourCentre', ep_date: '',
+  ep_left_db: '', ep_left_pass: '',
+  ep_right_db:'', ep_right_pass:'',
+
+  ling_include: false,
+  ling_1m: false, ling_2m: false, ling_36m: false,
+  ling_results: {},   // { '/m/': { '1m': true, '2m': false, ... } }
+
+  q_type: '',
+  q_notes: '',
+  cosi_session_idx: 0,
+  cosi_needs: ['','',''],
+
+  fit_left_ha: '',  fit_left_mold: '',  fit_left_rem: false,
+  fit_right_ha:'',  fit_right_mold:'',  fit_right_rem: false,
+
+  conclusion: '',
+  doc_pending: false,
+  doc_pending_text: '',
+
+  final_notes: '',
+};
+
+let TOKEN = '';
+let currentStep = 0;
+let doctors = [];
+let cosiSessions = [];
+const PATIENT_ID = 'PAT001';
+
+const STEPS = [
+  { id:'introduction',      label:'Introducción',  required: true  },
+  { id:'collaborativeness', label:'Colaboración',  required: true  },
+  { id:'ear',               label:'Oído',          required: true  },
+  { id:'tests',             label:'Pruebas',       required: false },
+  { id:'questionnaire',     label:'Cuestionario',  required: false },
+  { id:'fitting',           label:'Adaptación',    required: false },
+  { id:'conclusions',       label:'Conclusiones',  required: true  },
+  { id:'finalNotes',        label:'Notas finales', required: true  },
+];
+
+// ═══════════════════════════════════════════════════════════════
+// INIT — token automatico all'avvio, nessun login
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async () => {
+poi  // Riusa il token salvato se ancora valido, altrimenti ne genera uno nuovo
+  const stored = localStorage.getItem('ped_report_token');
+  if (stored && isTokenValid(stored)) {
+    TOKEN = stored;
+  } else {
+    const d = await fetch('/mock/sf/token').then(r => r.json());
+    TOKEN = d.token;
+    localStorage.setItem('ped_report_token', TOKEN);
+  }
+  await init();
+});
+
+/** Controlla che il token JWT non sia scaduto. */
+function isTokenValid(token) {
+  try {
+    const { exp } = JSON.parse(atob(token.split('.')[1]));
+    return exp * 1000 > Date.now() + 60_000; // almeno 1 min di margine
+  } catch { return false; }
+}
+
+async function init() {
+  try {
+    const payload = JSON.parse(atob(TOKEN.split('.')[1]));
+    document.getElementById('pro-label').textContent =
+      `Profesional: ${payload.name} ${payload.surname}`;
+  } catch {}
+  const [dr, cs] = await Promise.all([
+    apiFetch('/mock/sf/doctors').then(r => r.json()),
+    apiFetch(`/mock/sf/patients/${PATIENT_ID}/cosi`).then(r => r.json()),
+  ]);
+  doctors = dr;
+  cosiSessions = cs;
+  // Pre-popolate cosi_needs from first session
+  if (cs[0]) STATE.cosi_needs = [...cs[0].needs];
+
+  buildStepper();
+  renderStep(0);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STEPPER
+// ═══════════════════════════════════════════════════════════════
+function buildStepper() {
+  document.getElementById('stepper').innerHTML = STEPS.map((s,i) => `
+    <div class="step-item" id="sdot-${i}">
+      <div class="step-dot">${i+1}</div>
+      <span class="step-label">${s.label}</span>
+    </div>`).join('');
+}
+function updateStepper() {
+  STEPS.forEach((_,i) => {
+    const el = document.getElementById(`sdot-${i}`);
+    el.className = 'step-item' + (i < currentStep ? ' done' : i === currentStep ? ' active' : '');
+    el.querySelector('.step-dot').textContent = i < currentStep ? '✓' : i+1;
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STEP RENDER — salva prima di uscire, ripopola all'arrivo
+// ═══════════════════════════════════════════════════════════════
+function renderStep(idx) {
+  currentStep = idx;
+  updateStepper();
+  const isLast = idx === STEPS.length - 1;
+  document.getElementById('btn-next').style.display   = isLast ? 'none' : '';
+  document.getElementById('btn-json').style.display   = isLast ? '' : 'none';
+  document.getElementById('btn-html').style.display   = isLast ? '' : 'none';
+  document.getElementById('btn-pdf').style.display    = isLast ? '' : 'none';
+  document.getElementById('btn-back').disabled        = idx === 0;
+  document.getElementById('global-error').style.display = 'none';
+
+  const renders = {
+    introduction: renderIntroduction, collaborativeness: renderCollaborativeness,
+    ear: renderEar, tests: renderTests, questionnaire: renderQuestionnaire,
+    fitting: renderFitting, conclusions: renderConclusions, finalNotes: renderFinalNotes,
+  };
+  document.getElementById('steps-container').innerHTML = renders[STEPS[idx].id]();
+  restoreState(STEPS[idx].id);
+  bindLiveValidation();
+  validateStep();       // sets btn-next enabled/disabled immediately
+}
+
+function nextStep() {
+  if (!validateStep()) return;
+  saveState(STEPS[currentStep].id);
+  if (currentStep < STEPS.length - 1) renderStep(currentStep + 1);
+}
+function prevStep() {
+  saveState(STEPS[currentStep].id);
+  if (currentStep > 0) renderStep(currentStep - 1);
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SAVE STATE — legge i valori dal DOM e li mette in STATE
+// ═══════════════════════════════════════════════════════════════
+function saveState(stepId) {
+  const g = (id) => document.getElementById(id);
+  const v = (id) => g(id)?.value?.trim() ?? '';
+  const c = (id) => g(id)?.checked ?? false;
+
+  if (stepId === 'introduction') {
+    STATE.recipientType = v('recipientType');
+    STATE.doctorId      = v('doctorId');
+    STATE.hideName      = c('hideName');
+  }
+  if (stepId === 'collaborativeness') {
+    STATE.collaborativeness = v('collaborativeness');
+  }
+  if (stepId === 'ear') {
+    STATE.otoscopy_left    = v('otoscopy-left');
+    STATE.tympType_left    = v('tympType-left');
+    STATE.tympPressure_left= v('tympPressure-left');
+    STATE.otoscopy_right   = v('otoscopy-right');
+    STATE.tympType_right   = v('tympType-right');
+    STATE.tympPressure_right=v('tympPressure-right');
+  }
+  if (stepId === 'tests') {
+    STATE.ep_include    = c('ep-include');
+    STATE.ep_performer  = v('ep-performer');
+    STATE.ep_date       = v('ep-date');
+    STATE.ep_left_db    = v('ep-left-db');
+    STATE.ep_left_pass  = v('ep-left-pass');
+    STATE.ep_right_db   = v('ep-right-db');
+    STATE.ep_right_pass = v('ep-right-pass');
+    STATE.ling_include  = c('ling-include');
+    STATE.ling_1m       = c('ling-1m');
+    STATE.ling_2m       = c('ling-2m');
+    STATE.ling_36m      = c('ling-36m');
+    // Save ling results
+    const sounds = ['/m/','/u/','/a/','/i/','/sh/','/s/'];
+    const dists  = [];
+    if (STATE.ling_1m)  dists.push('1m');
+    if (STATE.ling_2m)  dists.push('2m');
+    if (STATE.ling_36m) dists.push('3-6m');
+    STATE.ling_results = {};
+    sounds.forEach(s => {
+      STATE.ling_results[s] = {};
+      dists.forEach(d => {
+        const key = `ling-${s.replace(/\//g,'')}-${d}`;
+        STATE.ling_results[s][d] = c(key);
+      });
+    });
+  }
+  if (stepId === 'questionnaire') {
+    STATE.q_type          = v('q-type');
+    STATE.q_notes         = v('q-notes');
+    STATE.cosi_session_idx= parseInt(v('cosi-session') || '0');
+    STATE.cosi_needs      = [0,1,2].map(i => g(`cosi-need-${i}`)?.value ?? '');
+  }
+  if (stepId === 'fitting') {
+    STATE.fit_left_ha   = v('ha-type-left');
+    STATE.fit_left_mold = v('mold-type-left');
+    STATE.fit_left_rem  = c('rem-left');
+    STATE.fit_right_ha  = v('ha-type-right');
+    STATE.fit_right_mold= v('mold-type-right');
+    STATE.fit_right_rem = c('rem-right');
+  }
+  if (stepId === 'conclusions') {
+    STATE.conclusion       = v('conclusion-value');
+    STATE.doc_pending      = c('doc-pending');
+    STATE.doc_pending_text = v('doc-pending-text');
+  }
+  if (stepId === 'finalNotes') {
+    STATE.final_notes = v('final-notes');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// RESTORE STATE — ripopola il DOM dai valori in STATE
+// ═══════════════════════════════════════════════════════════════
+function restoreState(stepId) {
+  const s = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+  const ch= (id, val) => { const el = document.getElementById(id); if (el) el.checked = val; };
+
+  if (stepId === 'introduction') {
+    s('recipientType', STATE.recipientType);
+    toggleDoctorSelect();
+    s('doctorId', STATE.doctorId);
+    ch('hideName', STATE.hideName);
+  }
+  if (stepId === 'collaborativeness') {
+    s('collaborativeness', STATE.collaborativeness);
+  }
+  if (stepId === 'ear') {
+    s('otoscopy-left',    STATE.otoscopy_left);
+    s('tympType-left',    STATE.tympType_left);
+    s('tympPressure-left',STATE.tympPressure_left);
+    s('otoscopy-right',   STATE.otoscopy_right);
+    s('tympType-right',   STATE.tympType_right);
+    s('tympPressure-right',STATE.tympPressure_right);
+  }
+  if (stepId === 'tests') {
+    ch('ep-include',   STATE.ep_include);  toggleSection_id('ep-body', STATE.ep_include);
+    s('ep-performer',  STATE.ep_performer); toggleEpDate();
+    s('ep-date',       STATE.ep_date);
+    s('ep-left-db',    STATE.ep_left_db);
+    s('ep-left-pass',  STATE.ep_left_pass);
+    s('ep-right-db',   STATE.ep_right_db);
+    s('ep-right-pass', STATE.ep_right_pass);
+    ch('ling-include', STATE.ling_include); toggleSection_id('ling-body', STATE.ling_include);
+    ch('ling-1m',  STATE.ling_1m);
+    ch('ling-2m',  STATE.ling_2m);
+    ch('ling-36m', STATE.ling_36m);
+    buildLingTable();
+    // Restore ling checked
+    const sounds = ['/m/','/u/','/a/','/i/','/sh/','/s/'];
+    sounds.forEach(s2 => {
+      Object.entries(STATE.ling_results[s2] || {}).forEach(([d, v]) => {
+        const el = document.getElementById(`ling-${s2.replace(/\//g,'')}-${d}`);
+        if (el) el.checked = v;
+      });
+    });
+  }
+  if (stepId === 'questionnaire') {
+    s('q-type', STATE.q_type); toggleQuestionnaire();
+    s('q-notes', STATE.q_notes);
+    const sessionEl = document.getElementById('cosi-session');
+    if (sessionEl) sessionEl.value = STATE.cosi_session_idx;
+    loadCosiNeeds(false); // false = don't reset from SF, use STATE
+  }
+  if (stepId === 'fitting') {
+    s('ha-type-left',   STATE.fit_left_ha);
+    s('mold-type-left', STATE.fit_left_mold);
+    ch('rem-left',      STATE.fit_left_rem);
+    s('ha-type-right',  STATE.fit_right_ha);
+    s('mold-type-right',STATE.fit_right_mold);
+    ch('rem-right',     STATE.fit_right_rem);
+  }
+  if (stepId === 'conclusions') {
+    s('conclusion-value', STATE.conclusion);
+    ch('doc-pending', STATE.doc_pending); toggleDocPending();
+    s('doc-pending-text', STATE.doc_pending_text);
+  }
+  if (stepId === 'finalNotes') {
+    s('final-notes', STATE.final_notes);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// VALIDATION HELPERS
+// ═══════════════════════════════════════════════════════════════
+
+/** Valida formato dd/mm/yyyy e che la data non sia futura. Ritorna stringa di errore o ''. */
+function validateDate(raw) {
+  if (!raw) return 'Introduce una fecha.';
+  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(raw))
+    return `Formato de fecha incorrecto: usa dd/mm/aaaa (ejemplo: 15/03/2026). Valor introducido: "${raw}"`;
+  const [d, m, y] = raw.split('/').map(Number);
+  const date = new Date(y, m - 1, d);
+  if (date.getMonth() !== m - 1 || date.getDate() !== d)
+    return `Fecha inválida: el mes ${m} no tiene el día ${d}.`;
+  if (date > new Date())
+    return 'La fecha no puede ser futura.';
+  return '';
+}
+
+/** Valida pressione timpanometria: intero tra −400 e +200 daPa. */
+function validatePressure(raw, label) {
+  if (raw === '' || raw == null) return ''; // campo vuoto = lato non testato
+  const n = Number(raw);
+  if (!Number.isInteger(n))   return `${label}: la presión debe ser un número entero.`;
+  if (n < -400 || n > 200)    return `${label}: la presión debe estar entre −400 y +200 daPa. Valor introducido: ${n}.`;
+  return '';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// VALIDATION — returns true if step is valid
+// ═══════════════════════════════════════════════════════════════
+function validateStep() {
+  const stepId = STEPS[currentStep].id;
+  const hint = document.getElementById('val-hint');
+  const btn  = document.getElementById('btn-next');
+  const isLast = currentStep === STEPS.length - 1;
+
+  let msg = '';
+
+  if (stepId === 'introduction') {
+    const rt = document.getElementById('recipientType')?.value;
+    if (!rt) msg = 'Selecciona el tipo de destinatario.';
+    else if (rt === 'doctor' && !document.getElementById('doctorId')?.value)
+      msg = 'Selecciona un médico de la lista.';
+  }
+
+  if (stepId === 'collaborativeness') {
+    if (!document.getElementById('collaborativeness')?.value)
+      msg = 'Selecciona el nivel de colaboración.';
+  }
+
+  if (stepId === 'ear') {
+    const leftAny  = earSideAny('left');
+    const rightAny = earSideAny('right');
+    const leftOk   = earSideComplete('left');
+    const rightOk  = earSideComplete('right');
+
+    if (leftAny && !leftOk) {
+      msg = 'Oído izquierdo: completa todos los campos o déjalo vacío.';
+    } else if (rightAny && !rightOk) {
+      msg = 'Oído derecho: completa todos los campos o déjalo vacío.';
+    } else if (!leftOk && !rightOk) {
+      msg = 'Completa al menos un oído (timpanometría es sección mínima obligatoria).';
+    } else {
+      // Validate pressure range for filled sides
+      if (leftOk) {
+        const err = validatePressure(
+          document.getElementById('tympPressure-left')?.value,
+          'Oído izquierdo'
+        );
+        if (err) msg = err;
+      }
+      if (!msg && rightOk) {
+        const err = validatePressure(
+          document.getElementById('tympPressure-right')?.value,
+          'Oído derecho'
+        );
+        if (err) msg = err;
+      }
+    }
+  }
+
+  if (stepId === 'tests') {
+    const epOn = document.getElementById('ep-include')?.checked;
+    if (epOn) {
+      const perf = document.getElementById('ep-performer')?.value;
+      if (perf === 'specialist') {
+        const dateErr = validateDate(document.getElementById('ep-date')?.value);
+        if (dateErr) msg = `Potenciales Evocados — fecha: ${dateErr}`;
+      }
+      if (!msg) {
+        const ldb = document.getElementById('ep-left-db')?.value;
+        const rdb = document.getElementById('ep-right-db')?.value;
+        if (!ldb && !rdb) {
+          msg = 'Potenciales Evocados: completa al menos un oído.';
+        } else {
+          if (ldb && !document.getElementById('ep-left-pass')?.value)
+            msg = 'Potenciales Evocados oído izquierdo: selecciona Pass/No Pass.';
+          if (!msg && rdb && !document.getElementById('ep-right-pass')?.value)
+            msg = 'Potenciales Evocados oído derecho: selecciona Pass/No Pass.';
+        }
+      }
+    }
+    const lingOn = document.getElementById('ling-include')?.checked;
+    if (lingOn && !msg) {
+      const d1 = document.getElementById('ling-1m')?.checked;
+      const d2 = document.getElementById('ling-2m')?.checked;
+      const d3 = document.getElementById('ling-36m')?.checked;
+      if (!d1 && !d2 && !d3) msg = 'Test de Ling: selecciona al menos una distancia.';
+    }
+  }
+
+  if (stepId === 'questionnaire') {
+    const qt = document.getElementById('q-type')?.value;
+    if (qt === 'COSI') {
+      const needs = [0,1,2].map(i => document.getElementById(`cosi-need-${i}`)?.value?.trim());
+      if (needs.some(n => !n)) msg = 'COSI: completa las 3 necesidades del paciente.';
+    }
+  }
+
+  if (stepId === 'conclusions') {
+    if (!document.getElementById('conclusion-value')?.value)
+      msg = 'Selecciona una conclusión.';
+    else if (document.getElementById('doc-pending')?.checked &&
+             !document.getElementById('doc-pending-text')?.value?.trim())
+      msg = 'Especifica la documentación pendiente.';
+  }
+
+  if (stepId === 'finalNotes') {
+    if (!document.getElementById('final-notes')?.value?.trim())
+      msg = 'Las notas finales son obligatorias.';
+  }
+
+  const valid = !msg;
+  if (hint) { hint.textContent = msg; hint.classList.toggle('show', !!msg); }
+  if (!isLast && btn) btn.disabled = !valid;
+  return valid;
+}
+
+function earSideAny(side) {
+  return !!(
+    document.getElementById(`otoscopy-${side}`)?.value ||
+    document.getElementById(`tympType-${side}`)?.value ||
+    document.getElementById(`tympPressure-${side}`)?.value
+  );
+}
+function earSideComplete(side) {
+  const o = document.getElementById(`otoscopy-${side}`)?.value;
+  const t = document.getElementById(`tympType-${side}`)?.value;
+  const p = document.getElementById(`tympPressure-${side}`)?.value;
+  return !!(o && t && p !== '');
+}
+
+// ── attach live validation to every input in current step
+function bindLiveValidation() {
+  document.getElementById('steps-container')
+    .querySelectorAll('select, input, textarea')
+    .forEach(el => {
+      el.addEventListener('input',  validateStep);
+      el.addEventListener('change', validateStep);
+    });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// STEP HTML
+// ═══════════════════════════════════════════════════════════════
+function renderIntroduction() {
+  const opts = doctors.map(d =>
+    `<option value="${d.id}">${d.gender==='F'?'Dra.':'Dr.'} ${d.surname} — ${d.specialty}</option>`
+  ).join('');
+  return `<div class="card">
+    <div class="card-title">1. Introducción <span class="badge">Obligatorio</span></div>
+    <div class="field">
+      <label>Tipo de destinatario</label>
+      <select id="recipientType" onchange="toggleDoctorSelect(); validateStep()">
+        <option value="">— Selecciona —</option>
+        <option value="doctor">Médico (con búsqueda en base de datos)</option>
+        <option value="genericEnt">Generic ENT (saludo genérico "Estimado Doctor")</option>
+        <option value="professional">Otro profesional ("Estimado profesional")</option>
+      </select>
+    </div>
+    <div id="doctor-select-row" style="display:none">
+      <div class="field">
+        <label>Médico destinatario</label>
+        <select id="doctorId" onchange="validateStep()">
+          <option value="">— Selecciona médico —</option>
+          ${opts}
+        </select>
+      </div>
+      <label class="checkbox-label" style="margin-bottom:14px">
+        <input type="checkbox" id="hideName"> Ocultar nombre en el informe (usa saludo genérico)
+      </label>
+    </div>
+  </div>`;
+}
+
+function renderCollaborativeness() {
+  return `<div class="card">
+    <div class="card-title">2. Colaboración <span class="badge">Obligatorio</span></div>
+    <div class="field">
+      <label>Durante la valoración, el niño/a se ha mostrado…</label>
+      <select id="collaborativeness">
+        <option value="">— Selecciona —</option>
+        <option value="Collaborative">Colaborativo</option>
+        <option value="Not Collaborative">No colaborativo</option>
+      </select>
+    </div>
+  </div>`;
+}
+
+function earSideHtml(side, label) {
+  return `<div>
+    <div class="ear-col-title">${label}</div>
+    <div class="field">
+      <label>Otoscopia</label>
+      <select id="otoscopy-${side}">
+        <option value="">— Omitir lado —</option>
+        <option value="Normal">Normal</option>
+        <option value="Altered">Alterada</option>
+        <option value="AlteredENTRef">Alterada + derivación ORL</option>
+        <option value="WaxBlockage">Posible tapón de cera</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Tipo timpanometría</label>
+      <select id="tympType-${side}">
+        <option value="">— Omitir lado —</option>
+        <option value="A">A – Movilidad normal</option>
+        <option value="As">As – Baja movilidad</option>
+        <option value="Ad">Ad – Movilidad muy alta</option>
+        <option value="B">B – Sin movilidad</option>
+        <option value="C">C – Movilidad variable (Eustaquio)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Presión (daPa)  −400 / +200</label>
+      <input type="number" id="tympPressure-${side}" min="-400" max="200" step="1" placeholder="ej. 15">
+    </div>
+  </div>`;
+}
+
+function renderEar() {
+  return `<div class="card">
+    <div class="card-title">3. El Oído — Otoscopia + Timpanometría <span class="badge">Mín. obligatorio</span></div>
+    <p class="hint" style="margin-bottom:14px">Regla todo-o-nada: si rellenas un campo de un lado, todos son obligatorios. Deja ambos campos vacíos para omitir ese lado. Al menos un lado debe completarse.</p>
+    <div class="ear-cols">
+      ${earSideHtml('left','🔵 Oído Izquierdo')}
+      ${earSideHtml('right','🔴 Oído Derecho')}
+    </div>
+  </div>`;
+}
+
+function renderTests() {
+  const dbOpts = Array.from({length:27},(_,i)=>i*5)
+    .map(v=>`<option value="${v}">${v} dB</option>`).join('');
+  return `<div class="card">
+    <div class="card-title">4. Pruebas diagnósticas <span class="badge opt">Opcional</span></div>
+
+    <!-- Evoked Potentials -->
+    <div class="toggle-section">
+      <div class="toggle-header" onclick="toggleSectionEl(this)">
+        <label class="checkbox-label" onclick="event.stopPropagation()">
+          <input type="checkbox" id="ep-include" onchange="toggleSection_id('ep-body',this.checked);validateStep()">
+          <span style="font-size:13px;font-weight:600">Potenciales Evocados</span>
+        </label>
+        <span class="toggle-arrow">▾</span>
+      </div>
+      <div class="toggle-body" id="ep-body">
+        <div class="field">
+          <label>Realizado por</label>
+          <select id="ep-performer" onchange="toggleEpDate();validateStep()">
+            <option value="ourCentre">Nuestro centro</option>
+            <option value="specialist">Especialista externo (con fecha)</option>
+          </select>
+        </div>
+        <div class="field" id="ep-date-row" style="display:none">
+          <label>Fecha (dd/mm/aaaa) — no puede ser futura</label>
+          <input type="text" id="ep-date" placeholder="dd/mm/aaaa">
+        </div>
+        <div class="field-row">
+          <div>
+            <div class="ear-col-title">🔵 Oído Izquierdo</div>
+            <div class="field"><label>Nivel dB</label>
+              <select id="ep-left-db"><option value="">— No testado —</option>${dbOpts}</select></div>
+            <div class="field"><label>Resultado</label>
+              <select id="ep-left-pass"><option value="">—</option><option value="true">PASS</option><option value="false">NO PASS</option></select></div>
+          </div>
+          <div>
+            <div class="ear-col-title">🔴 Oído Derecho</div>
+            <div class="field"><label>Nivel dB</label>
+              <select id="ep-right-db"><option value="">— No testado —</option>${dbOpts}</select></div>
+            <div class="field"><label>Resultado</label>
+              <select id="ep-right-pass"><option value="">—</option><option value="true">PASS</option><option value="false">NO PASS</option></select></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ling Test -->
+    <div class="toggle-section">
+      <div class="toggle-header" onclick="toggleSectionEl(this)">
+        <label class="checkbox-label" onclick="event.stopPropagation()">
+          <input type="checkbox" id="ling-include" onchange="toggleSection_id('ling-body',this.checked);validateStep()">
+          <span style="font-size:13px;font-weight:600">Test de Ling (6 sonidos)</span>
+        </label>
+        <span class="toggle-arrow">▾</span>
+      </div>
+      <div class="toggle-body" id="ling-body">
+        <div class="field">
+          <label>Distancias testadas (selecciona al menos una)</label>
+          <div style="display:flex;gap:16px;margin-top:4px">
+            <label class="checkbox-label"><input type="checkbox" id="ling-1m"  onchange="buildLingTable();validateStep()"> 1m</label>
+            <label class="checkbox-label"><input type="checkbox" id="ling-2m"  onchange="buildLingTable();validateStep()"> 2m</label>
+            <label class="checkbox-label"><input type="checkbox" id="ling-36m" onchange="buildLingTable();validateStep()"> 3–6m</label>
+          </div>
+        </div>
+        <div id="ling-table-container"></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderQuestionnaire() {
+  const sessionOpts = cosiSessions.map((s,i) =>
+    `<option value="${i}">${s.sessionDate}</option>`).join('');
+  return `<div class="card">
+    <div class="card-title">5. Cuestionario <span class="badge opt">Opcional</span></div>
+    <div class="field">
+      <label>Tipo de cuestionario</label>
+      <select id="q-type" onchange="toggleQuestionnaire();validateStep()">
+        <option value="">— No incluir —</option>
+        <option value="ELF">ELF (0–3 años)</option>
+        <option value="CHILD">CHILD (3–12 años)</option>
+        <option value="COSI">COSI (&gt;13 años)</option>
+      </select>
+    </div>
+    <div id="q-notes-row" style="display:none" class="field">
+      <label>Observaciones libres</label>
+      <textarea id="q-notes" placeholder="Escribe las observaciones..."></textarea>
+    </div>
+    <div id="q-cosi-row" style="display:none">
+      <div class="field">
+        <label>Sesión COSI (fecha de recogida de necesidades)</label>
+        <select id="cosi-session" onchange="loadCosiNeeds(true)">${sessionOpts}</select>
+      </div>
+      <p class="hint" style="margin-bottom:8px">Los textos son editables — la versión modificada irá al informe. No se escribirá nada en Salesforce.</p>
+      <div id="cosi-needs-container"></div>
+    </div>
+  </div>`;
+}
+
+function fittingSideHtml(side, label) {
+  const haOpts = [
+    ['IIC','IIC — Intra-auricular IIC'],['CIC','CIC — Intra-auricular CIC'],
+    ['ITC','ITC — Intra-auricular ITC'],['ITE','ITE — Intra-auricular ITE'],
+    ['RITE_RIC','RITE/RIC — Retro-auricular'],['BTE','BTE — Retro-auricular BTE'],
+    ['BTE_SUPER','BTE Superpotente'],['BICROSS_ITE','Bi-cross ITE'],['BICROSS_BTE','Bi-cross BTE'],
+  ].map(([k,l])=>`<option value="${k}">${l}</option>`).join('');
+  return `<div>
+    <div class="ear-col-title">${label}</div>
+    <div class="field"><label>Tipo de audífono</label>
+      <select id="ha-type-${side}">
+        <option value="">— No aplica —</option>${haOpts}
+      </select></div>
+    <div class="field"><label>Tipo de molde <span style="font-weight:400;color:#57606a">(opcional)</span></label>
+      <select id="mold-type-${side}">
+        <option value="">— Sin molde —</option>
+        <option value="BTE_EARMOLD">Molde BTE/BTE superpotente (PAM 000A)</option>
+      </select></div>
+    <label class="checkbox-label" style="margin-top:4px">
+      <input type="checkbox" id="rem-${side}"> Verificado con REM/RECD
+    </label>
+  </div>`;
+}
+
+function renderFitting() {
+  return `<div class="card">
+    <div class="card-title">6. Información de Adaptación <span class="badge opt">Opcional</span></div>
+    <p class="hint" style="margin-bottom:14px">Regla todo-o-nada por lado. El código del audífono se asigna automáticamente según el tipo.</p>
+    <div class="ear-cols">
+      ${fittingSideHtml('left','🔵 Oído Izquierdo')}
+      ${fittingSideHtml('right','🔴 Oído Derecho')}
+    </div>
+  </div>`;
+}
+
+function renderConclusions() {
+  return `<div class="card">
+    <div class="card-title">7. Conclusiones <span class="badge">Obligatorio</span></div>
+    <div class="field">
+      <label>Conclusión</label>
+      <select id="conclusion-value">
+        <option value="">— Selecciona —</option>
+        <option value="CONCLUSION_1">[Placeholder conclusión 1 — pendiente equipo Product]</option>
+        <option value="CONCLUSION_2">[Placeholder conclusión 2 — pendiente equipo Product]</option>
+        <option value="CONCLUSION_3">[Placeholder conclusión 3 — pendiente equipo Product]</option>
+        <option value="CONCLUSION_4">[Placeholder conclusión 4 — pendiente equipo Product]</option>
+      </select>
+    </div>
+    <label class="checkbox-label" style="margin-bottom:14px">
+      <input type="checkbox" id="doc-pending" onchange="toggleDocPending();validateStep()">
+      Documentación pendiente para la adaptación
+    </label>
+    <div id="doc-pending-text-row" style="display:none" class="field">
+      <label>Especifica qué documentación falta</label>
+      <textarea id="doc-pending-text" placeholder="Indica la documentación pendiente..."></textarea>
+    </div>
+  </div>`;
+}
+
+function renderFinalNotes() {
+  return `<div class="card">
+    <div class="card-title">8. Notas finales <span class="badge">Obligatorio</span></div>
+    <div class="field">
+      <label>Notas</label>
+      <textarea id="final-notes" rows="5" placeholder="Escribe las notas finales..."></textarea>
+    </div>
+    <div class="alert alert-info" style="margin-top:0">
+      La fórmula de cierre estándar [PLACEHOLDER — pendiente equipo Product] y la firma del profesional se añadirán automáticamente.
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════════════
+// DYNAMIC UI HELPERS
+// ═══════════════════════════════════════════════════════════════
+function toggleDoctorSelect() {
+  const show = document.getElementById('recipientType')?.value === 'doctor';
+  document.getElementById('doctor-select-row').style.display = show ? '' : 'none';
+}
+function toggleSectionEl(header) {
+  header.classList.toggle('open');
+  header.nextElementSibling.classList.toggle('open');
+}
+function toggleSection_id(bodyId, open) {
+  const el = document.getElementById(bodyId);
+  if (el) el.classList.toggle('open', open);
+}
+function toggleEpDate() {
+  const show = document.getElementById('ep-performer')?.value === 'specialist';
+  const row  = document.getElementById('ep-date-row');
+  if (row) row.style.display = show ? '' : 'none';
+}
+function toggleQuestionnaire() {
+  const t = document.getElementById('q-type')?.value;
+  const notesRow = document.getElementById('q-notes-row');
+  const cosiRow  = document.getElementById('q-cosi-row');
+  if (notesRow) notesRow.style.display = (t === 'ELF' || t === 'CHILD') ? '' : 'none';
+  if (cosiRow)  cosiRow.style.display  = t === 'COSI' ? '' : 'none';
+  if (t === 'COSI') loadCosiNeeds(false);
+}
+function loadCosiNeeds(resetFromSF) {
+  const idx = parseInt(document.getElementById('cosi-session')?.value ?? '0');
+  const session = cosiSessions[idx];
+  if (!session) return;
+  const container = document.getElementById('cosi-needs-container');
+  if (!container) return;
+  const needs = resetFromSF ? session.needs : STATE.cosi_needs;
+  container.innerHTML = session.needs.map((_, i) => `
+    <div class="cosi-need">
+      <label>Necesidad ${i+1}</label>
+      <textarea id="cosi-need-${i}" rows="2">${needs[i] || session.needs[i]}</textarea>
+    </div>`).join('');
+  // rebind validation
+  container.querySelectorAll('textarea').forEach(el => {
+    el.addEventListener('input', validateStep);
+  });
+}
+function buildLingTable() {
+  const dists = [];
+  if (document.getElementById('ling-1m')?.checked)  dists.push('1m');
+  if (document.getElementById('ling-2m')?.checked)  dists.push('2m');
+  if (document.getElementById('ling-36m')?.checked) dists.push('3-6m');
+  const container = document.getElementById('ling-table-container');
+  if (!container) return;
+  if (!dists.length) { container.innerHTML = ''; return; }
+  const sounds = ['/m/','/u/','/a/','/i/','/sh/','/s/'];
+  const headers = dists.map(d=>`<th>${d}</th>`).join('');
+  const rows = sounds.map(s => {
+    const k = s.replace(/\//g,'');
+    const cells = dists.map(d =>
+      `<td><input type="checkbox" id="ling-${k}-${d}"></td>`
+    ).join('');
+    return `<tr><td class="sound">${s}</td>${cells}</tr>`;
+  }).join('');
+  container.innerHTML = `
+    <table class="ling-table">
+      <thead><tr><th>Sonido</th>${headers}</tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <p class="hint" style="margin-top:4px">✓ marcado = escuchado a esa distancia</p>`;
+}
+function toggleDocPending() {
+  const show = document.getElementById('doc-pending')?.checked;
+  const row  = document.getElementById('doc-pending-text-row');
+  if (row) row.style.display = show ? '' : 'none';
+}
+
+// ═══════════════════════════════════════════════════════════════
+// COLLECT PAYLOAD — legge interamente da STATE (salvato ad ogni step)
+// ═══════════════════════════════════════════════════════════════
+function collectPayload() {
+  // Make sure current step state is saved first
+  saveState(STEPS[currentStep].id);
+
+  const errs = [];
+  const p = { patientId: PATIENT_ID };
+
+  // Introduction
+  if (!STATE.recipientType) errs.push('Selecciona el tipo de destinatario (paso 1).');
+  p.introduction = { recipientType: STATE.recipientType, hideName: STATE.hideName };
+  if (STATE.recipientType === 'doctor') {
+    if (!STATE.doctorId) errs.push('Selecciona un médico (paso 1).');
+    p.introduction.doctorId = STATE.doctorId || null;
+  }
+
+  // Collaborativeness
+  if (!STATE.collaborativeness) errs.push('Selecciona el nivel de colaboración (paso 2).');
+  p.collaborativeness = { value: STATE.collaborativeness };
+
+  // Ear — todo-o-nada
+  const ear = {};
+  ['left','right'].forEach(side => {
+    const o = STATE[`otoscopy_${side}`];
+    const t = STATE[`tympType_${side}`];
+    const pr= STATE[`tympPressure_${side}`];
+    if (o || t || pr) {
+      if (!o || !t || pr === '') errs.push(`Oído ${side === 'left' ? 'izquierdo' : 'derecho'}: completa todos los campos (paso 3).`);
+      else ear[side] = { otoscopyResult: o, tympanometryType: t, tympanometryPressure: parseFloat(pr) };
+    }
+  });
+  if (Object.keys(ear).length === 0) errs.push('Completa al menos un oído (paso 3).');
+  else p.ear = ear;
+
+  // Evoked Potentials
+  if (STATE.ep_include) {
+    const ep = { performer: STATE.ep_performer };
+    if (STATE.ep_performer === 'specialist') ep.specialistDate = STATE.ep_date || null;
+    if (STATE.ep_left_db)  ep.left  = { db: parseInt(STATE.ep_left_db),  pass: STATE.ep_left_pass  === 'true' };
+    if (STATE.ep_right_db) ep.right = { db: parseInt(STATE.ep_right_db), pass: STATE.ep_right_pass === 'true' };
+    if (!ep.left && !ep.right) errs.push('Potenciales Evocados: completa al menos un oído (paso 4).');
+    p.tests = p.tests || {};
+    p.tests.evokedPotentials = ep;
+  }
+
+  // Ling Test
+  if (STATE.ling_include) {
+    const dists = [];
+    if (STATE.ling_1m)  dists.push('1m');
+    if (STATE.ling_2m)  dists.push('2m');
+    if (STATE.ling_36m) dists.push('3-6m');
+    if (!dists.length) errs.push('Test de Ling: selecciona al menos una distancia (paso 4).');
+    else {
+      p.tests = p.tests || {};
+      p.tests.lingTest = { distances: dists, results: STATE.ling_results };
+    }
+  }
+
+  // Questionnaire
+  if (STATE.q_type) {
+    if (STATE.q_type === 'COSI') {
+      const session = cosiSessions[STATE.cosi_session_idx];
+      if (!session) errs.push('COSI: sesión no disponible (paso 5).');
+      else {
+        const needs = STATE.cosi_needs.map((n,i) => n || session.needs[i] || '');
+        if (needs.some(n => !n)) errs.push('COSI: completa las 3 necesidades (paso 5).');
+        p.questionnaire = { type: 'COSI', cosi: { sessionDate: session.sessionDate, needs } };
+      }
+    } else {
+      p.questionnaire = { type: STATE.q_type, notes: STATE.q_notes || '' };
+    }
+  }
+
+  // Fitting — todo-o-nada per lato
+  const fitting = {};
+  [['left','fit_left'],['right','fit_right']].forEach(([side, prefix]) => {
+    const ha = STATE[`${prefix}_ha`];
+    if (ha) {
+      fitting[side] = {
+        hearingAidType: ha, hearingAidCode: '',
+        earmoldType: STATE[`${prefix}_mold`] || null,
+        remRecdVerified: STATE[`${prefix}_rem`] || false,
+      };
+    }
+  });
+  if (Object.keys(fitting).length) p.fitting = fitting;
+
+  // Conclusions
+  if (!STATE.conclusion) errs.push('Selecciona una conclusión (paso 7).');
+  p.conclusions = {
+    value: STATE.conclusion,
+    documentationPending: STATE.doc_pending,
+    pendingDocumentationText: STATE.doc_pending ? STATE.doc_pending_text || null : null,
+  };
+  if (STATE.doc_pending && !STATE.doc_pending_text) errs.push('Especifica la documentación pendiente (paso 7).');
+
+  // Final notes
+  if (!STATE.final_notes) errs.push('Las notas finales son obligatorias (paso 8).');
+  p.finalNotes = { text: STATE.final_notes };
+
+  return { payload: p, errs };
+}
+
+// ═══════════════════════════════════════════════════════════════
+// SUBMIT
+// ═══════════════════════════════════════════════════════════════
+async function submitReport(format) {
+  document.getElementById('global-error').style.display = 'none';
+  const { payload, errs } = collectPayload();
+  if (errs.length) {
+    const el = document.getElementById('global-error');
+    el.innerHTML = errs.map(e => `• ${e}`).join('<br>');
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+
+  const accept = format === 'pdf'  ? 'application/pdf'
+               : format === 'html' ? 'text/html'
+               : 'application/json';
+
+  // Disable buttons during request
+  ['btn-json','btn-html','btn-pdf'].forEach(id => {
+    const b = document.getElementById(id); if (b) b.disabled = true;
+  });
+
+  try {
+    const r = await apiFetch('/api/reports', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: accept },
+      body: JSON.stringify(payload),
+    });
+
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({ error: r.statusText }));
+      const el = document.getElementById('global-error');
+      el.textContent = JSON.stringify(err.details || err.error, null, 2);
+      el.style.display = 'block';
+      return;
+    }
+
+    if (format === 'pdf') {
+      const blob = await r.blob();
+      const url  = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'informe-medico-pediatrico.pdf'; a.click();
+      URL.revokeObjectURL(url);
+    } else if (format === 'html') {
+      const html = await r.text();
+      const w = window.open('', '_blank');
+      w.document.write(html); w.document.close();
+    } else {
+      const json = await r.json();
+      const w = window.open('', '_blank');
+      w.document.write(`<pre style="font-family:monospace;font-size:13px;padding:20px;white-space:pre-wrap">${JSON.stringify(json,null,2)}</pre>`);
+      w.document.close();
+    }
+  } catch (e) {
+    const el = document.getElementById('global-error');
+    el.textContent = 'Error de red: ' + e.message;
+    el.style.display = 'block';
+  } finally {
+    ['btn-json','btn-html','btn-pdf'].forEach(id => {
+      const b = document.getElementById(id); if (b) b.disabled = false;
+    });
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════════
+function apiFetch(path, opts = {}) {
+  return fetch(path, { ...opts, headers: { Authorization: `Bearer ${TOKEN}`, ...(opts.headers||{}) } });
+}
+</script>
+</body>
+</html>
