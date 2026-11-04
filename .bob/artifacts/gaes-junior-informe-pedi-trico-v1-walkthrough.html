@@ -1,0 +1,575 @@
+
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GAES Junior — Walkthrough v1</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  background: #f0f2f5;
+  color: #1f2328;
+}
+
+/* ── Cover ── */
+.cover {
+  background: #C8003B;
+  color: #fff;
+  padding: 56px 40px 44px;
+  text-align: center;
+}
+.cover-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+/* Amplifon logo mockup nel cover */
+.cover-logo-mark {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.cover-logo-mark::before {
+  content: 'a';
+  font-size: 22px; font-weight: 900; color: #C8003B;
+}
+.cover-wordmark {
+  font-size: 26px; font-weight: 800; color: #fff; letter-spacing: -0.5px;
+}
+.cover h1 { font-size: 15px; font-weight: 400; opacity: .85; letter-spacing: .05em; text-transform: uppercase; }
+.cover h2 { font-size: 28px; font-weight: 800; margin-top: 8px; }
+.cover p  { opacity: .75; margin-top: 10px; font-size: 14px; }
+.cover .tag {
+  display: inline-block; margin-top: 20px;
+  background: rgba(255,255,255,.2); color: #fff;
+  padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+}
+
+/* ── Slide ── */
+.slide {
+  max-width: 1000px; margin: 28px auto; background: #fff;
+  border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+}
+.slide-header {
+  background: #fdf0f3; border-bottom: 1px solid #f0c8d4;
+  padding: 13px 24px; display: flex; align-items: center; gap: 12px;
+}
+.slide-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #C8003B; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; flex-shrink: 0;
+}
+.slide-header h2 { font-size: 14px; font-weight: 700; color: #1f2328; }
+.slide-header .badge {
+  font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px;
+  background: #fee2e2; color: #991b1b; margin-left: auto;
+}
+.slide-header .badge.opt { background: #dbeafe; color: #1d4ed8; margin-left: auto; }
+.slide-header .badge.ui  { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; margin-left: auto; }
+
+.slide-body { display: grid; grid-template-columns: 1fr 380px; }
+
+.caption {
+  padding: 22px 28px; border-right: 1px solid #f0e0e4;
+  display: flex; flex-direction: column; justify-content: center; gap: 10px;
+}
+.caption p { font-size: 13.5px; line-height: 1.7; color: #374151; }
+.caption .pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #fff0f3; border: 1px solid #f0c8d4;
+  color: #9b0027; font-size: 11px; font-weight: 600;
+  padding: 4px 10px; border-radius: 6px; width: fit-content;
+}
+
+.mockup { padding: 14px; background: #f7f8fa; display: flex; flex-direction: column; gap: 9px; }
+
+/* ── Navbar mock ── */
+.m-navbar {
+  background: #fff; border-bottom: 3px solid #C8003B;
+  padding: 0 12px; height: 38px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-radius: 5px 5px 0 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+.m-navbar-logo {
+  display: flex; align-items: center; gap: 6px;
+}
+.m-logo-circle {
+  width: 20px; height: 20px; border-radius: 50%; background: #C8003B;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 900; color: #fff;
+}
+.m-logo-text { font-size: 11px; font-weight: 800; color: #C8003B; letter-spacing: -.3px; }
+.m-navbar-pro { font-size: 9px; color: #57606a; text-align: right; }
+.m-navbar-pro strong { color: #1f2328; display: block; font-size: 9.5px; }
+
+/* ── Stepper mock ── */
+.m-stepper {
+  display: flex; gap: 0; overflow: hidden; border-radius: 4px;
+  border: 1px solid #e5e7eb; background: #fff; font-size: 8px;
+}
+.m-step { flex: 1; text-align: center; padding: 5px 2px; border-right: 1px solid #e5e7eb; }
+.m-step:last-child { border-right: none; }
+.m-dot {
+  width: 14px; height: 14px; border-radius: 50%; border: 2px solid #e5e7eb;
+  background: #fff; display: inline-flex; align-items: center; justify-content: center;
+  font-size: 7px; font-weight: 700; color: #57606a;
+}
+.m-step.active .m-dot { background: #C8003B; border-color: #C8003B; color: #fff; }
+.m-step.done   .m-dot { background: #10b981; border-color: #10b981; color: #fff; font-size: 9px; }
+.m-lbl { font-size: 7px; color: #57606a; margin-top: 2px; display: block; }
+.m-step.active .m-lbl { color: #C8003B; font-weight: 600; }
+
+/* ── Card mock ── */
+.mcard { background: #fff; border: 1px solid #e5e7eb; border-radius: 5px; padding: 10px; }
+.mcard-title { font-size: 10px; font-weight: 700; margin-bottom: 7px; display: flex; gap: 5px; align-items: center; }
+.mbadge { font-size: 7.5px; font-weight: 600; padding: 1px 5px; border-radius: 7px; background: #fee2e2; color: #991b1b; }
+.mbadge.opt { background: #dbeafe; color: #1d4ed8; }
+.mfield { margin-bottom: 6px; }
+.mfield label { display: block; font-size: 8px; font-weight: 600; color: #374151; margin-bottom: 2px; }
+.msel { width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 3px; font-size: 9px; color: #1f2328; background: #fff; }
+.msel.on { border-color: #C8003B; background: #fff0f3; }
+.minput { width: 100%; padding: 4px 6px; border: 1px solid #d1d5db; border-radius: 3px; font-size: 9px; }
+.minput.on { border-color: #C8003B; background: #fff0f3; }
+.mcol2 { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.mear-title { font-size: 8px; font-weight: 700; text-align: center; background: #C8003B; color: #fff; border-radius: 3px 3px 0 0; padding: 3px; }
+.mear-body { border: 1px solid #e0b0bb; border-top: none; border-radius: 0 0 3px 3px; padding: 5px; background: #fffafb; }
+.mear-row { display: flex; justify-content: space-between; padding: 2px 0; border-bottom: 1px solid #f5e5e8; font-size: 8px; }
+.mear-row:last-child { border: none; }
+.mear-row .lbl { color: #888; }
+.mear-row .val { font-weight: 600; }
+
+/* ── Ling table mock ── */
+.ling-t { width: 100%; border-collapse: collapse; font-size: 8px; margin-top: 4px; }
+.ling-t th { background: #C8003B; color: #fff; padding: 3px 5px; border: 1px solid #C8003B; text-align: center; font-weight: 600; }
+.ling-t td { padding: 3px 5px; border: 1px solid #e5e7eb; text-align: center; }
+.ling-t td.s { text-align: left; font-weight: 600; background: #fdf5f6; }
+.heard    { color: #1a7a1a; font-weight: 800; font-size: 11px; line-height: 1; }
+.notheard { color: #C8003B; font-weight: 800; font-size: 11px; line-height: 1; }
+
+/* ── Toggle mock ── */
+.mtoggle { border: 1px solid #e5e7eb; border-radius: 3px; overflow: hidden; margin-bottom: 5px; }
+.mtoggle-h { background: #f7f8fa; padding: 5px 7px; font-size: 9px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+.mtoggle-b { padding: 7px; }
+
+/* ── Bottom bar mock ── */
+.m-bottom {
+  background: #fff; border-top: 1px solid #e5e7eb;
+  padding: 7px 10px; display: flex; gap: 6px; justify-content: flex-end;
+  align-items: center; border-radius: 0 0 5px 5px;
+  box-shadow: 0 -1px 4px rgba(0,0,0,.05);
+}
+.mbtn { padding: 5px 10px; border-radius: 4px; font-size: 8.5px; font-weight: 600; border: none; }
+.mbtn-sec { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
+.mbtn-pri { background: #C8003B; color: #fff; }
+.mbtn-suc { background: #10b981; color: #fff; }
+.mbtn-red { background: #C8003B; color: #fff; }
+
+/* ── PDF preview mock ── */
+.pdf-wrap {
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden;
+}
+.pdf-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  border-bottom: 2px solid #C8003B; padding: 8px 10px 7px;
+}
+.pdf-logo-block { display: flex; flex-direction: column; gap: 2px; }
+.pdf-logo-row { display: flex; align-items: center; gap: 5px; }
+.pdf-logo-circle { width: 16px; height: 16px; border-radius: 50%; background: #C8003B; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 900; color: #fff; }
+.pdf-logo-text { font-size: 12px; font-weight: 800; color: #C8003B; letter-spacing: -.3px; }
+.pdf-informe { font-size: 7.5px; font-weight: 800; color: #C8003B; text-transform: uppercase; letter-spacing: .04em; margin-top: 2px; }
+.pdf-meta { text-align: right; font-size: 7px; color: #555; line-height: 1.6; }
+.pdf-meta .centre { font-weight: 800; color: #C8003B; font-size: 7.5px; }
+.pdf-meta .proname { font-weight: 700; color: #1a1a1a; }
+.pdf-body { padding: 8px 10px; }
+.pdf-greeting { background: #fff0f3; border-left: 3px solid #C8003B; padding: 4px 8px; font-size: 7.5px; font-weight: 700; margin-bottom: 7px; border-radius: 1px; }
+.pdf-sec { margin-bottom: 7px; }
+.pdf-sec-title { font-size: 7px; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; border-bottom: 1.5px solid #C8003B; padding-bottom: 2px; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+.pdf-sec-num { width: 12px; height: 12px; border-radius: 50%; background: #C8003B; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 6px; font-weight: 800; flex-shrink: 0; }
+.pdf-ear-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 7px; }
+.pdf-ear-head { background: #C8003B; color: #fff; text-align: center; padding: 2px 4px; font-weight: 700; font-size: 6.5px; border-radius: 2px 2px 0 0; }
+.pdf-ear-body { border: 1px solid #e0b0bb; border-top: none; border-radius: 0 0 2px 2px; padding: 4px; background: #fffafb; }
+.pdf-ear-row { display: flex; justify-content: space-between; padding: 1px 0; border-bottom: 1px solid #f5e0e4; font-size: 6.5px; }
+.pdf-ear-row:last-child { border: none; }
+.pdf-ear-row .lbl { color: #888; }
+.pdf-ear-row .val { font-weight: 600; }
+.pdf-table { width: 100%; border-collapse: collapse; font-size: 6.5px; margin-top: 3px; }
+.pdf-table th { background: #C8003B; color: #fff; padding: 2px 4px; border: 1px solid #C8003B; text-align: center; }
+.pdf-table td { padding: 2px 4px; border: 1px solid #e0e0e0; text-align: center; }
+.pdf-table td.lbl { text-align: left; font-weight: 600; background: #fdf5f6; }
+.pdf-badge-pass { background: #d1fae5; color: #065f46; padding: 1px 4px; border-radius: 2px; font-weight: 700; font-size: 6px; }
+.pdf-badge-no   { background: #fee2e2; color: #991b1b; padding: 1px 4px; border-radius: 2px; font-weight: 700; font-size: 6px; }
+.pdf-conclusion { font-size: 7px; line-height: 1.6; text-align: justify; color: #333; }
+.pdf-sig { margin-top: 8px; border-top: 1px solid #ccc; padding-top: 4px; font-size: 7px; }
+.pdf-sig-name { font-weight: 700; font-size: 7.5px; }
+.pdf-footer-line { font-size: 6.5px; color: #bbb; text-align: right; padding: 4px 10px 5px; border-top: 1px solid #f0f0f0; }
+
+/* ── Check ── */
+.mcheck { display: flex; gap: 4px; align-items: center; font-size: 8.5px; margin-top: 2px; }
+.mcheck-box { width: 11px; height: 11px; border: 1.5px solid #d1d5db; border-radius: 2px; background: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 7px; }
+.mcheck-box.on { background: #C8003B; border-color: #C8003B; color: #fff; }
+
+.footer { text-align: center; padding: 28px 16px; color: #9ca3af; font-size: 11px; border-top: 1px solid #e5e7eb; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+
+<div class="cover">
+  <div class="cover-logo">
+    <div class="cover-logo-mark"></div>
+    <div class="cover-wordmark">amplifon</div>
+  </div>
+  <div class="cover h1">GAES Junior · Informe Pediátrico</div>
+  <h2>Applicazione Web di Reportistica Audiologica</h2>
+  <p>Walkthrough del layout aggiornato · Novembre 2026</p>
+  <span class="tag">Node.js · Express · Nunjucks · Puppeteer</span>
+</div>
+
+
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-num">1</div>
+    <h2>Navbar Amplifon + Step 1 — Introducción</h2>
+    <span class="badge ui">UI Web</span>
+  </div>
+  <div class="slide-body">
+    <div class="caption">
+      <p>La navbar sticky in cima mostra il <strong>logo Amplifon reale</strong> (PNG) a sinistra e il nome dell'audiologo con il negozio a destra. I bottoni di navigazione sono fissi nella bottom bar — non si spostano con lo scroll del contenuto.</p>
+      <p>Il primo step raccoglie il tipo di destinatario: medico specifico (da SF), ORL generico o altro professionista. L'accento cromatico è <strong>#C8003B</strong> su tutti gli elementi interattivi.</p>
+      <span class="pill">🔒 Token JWT automatico — nessun login</span>
+    </div>
+    <div class="mockup">
+      
+      <div class="m-navbar">
+        <div class="m-navbar-logo">
+          <div class="m-logo-circle">a</div>
+          <span class="m-logo-text">mplifon</span>
+        </div>
+        <div class="m-navbar-pro">
+          <strong>Dra. Elena Martínez</strong>
+          GAES Junior — Amplifon Barcelona Sarrià
+        </div>
+      </div>
+      
+      <div class="m-stepper">
+        <div class="m-step active"><div class="m-dot">1</div><span class="m-lbl">Intro</span></div>
+        <div class="m-step"><div class="m-dot">2</div><span class="m-lbl">Colab.</span></div>
+        <div class="m-step"><div class="m-dot">3</div><span class="m-lbl">Oído</span></div>
+        <div class="m-step"><div class="m-dot">4</div><span class="m-lbl">Pruebas</span></div>
+        <div class="m-step"><div class="m-dot">5</div><span class="m-lbl">Cuest.</span></div>
+        <div class="m-step"><div class="m-dot">6</div><span class="m-lbl">Adapt.</span></div>
+        <div class="m-step"><div class="m-dot">7</div><span class="m-lbl">Concl.</span></div>
+        <div class="m-step"><div class="m-dot">8</div><span class="m-lbl">Notas</span></div>
+      </div>
+      
+      <div class="mcard">
+        <div class="mcard-title">1. Introducción <span class="mbadge">Obligatorio</span></div>
+        <div class="mfield">
+          <label>Tipo de destinatario</label>
+          <select class="msel on"><option>Médico (con búsqueda en base de datos)</option></select>
+        </div>
+        <div class="mfield">
+          <label>Médico destinatario</label>
+          <select class="msel on"><option>Dr. Mendoza — Otorrinolaringología</option></select>
+        </div>
+        <div class="mcheck"><span class="mcheck-box"></span> Ocultar nombre en el informe</div>
+      </div>
+      
+      <div class="m-bottom">
+        <button class="mbtn mbtn-sec" style="opacity:.4">← Anterior</button>
+        <button class="mbtn mbtn-pri">Siguiente →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-num">2</div>
+    <h2>Step 3 — The Ear (Otoscopia + Timpanometria)</h2>
+    <span class="badge">Obbligatorio</span>
+  </div>
+  <div class="slide-body">
+    <div class="caption">
+      <p>I due orecchi sono affiancati con intestazione rossa GAES. Logica <em>tutto-o-niente per lato</em>: se si riempie un campo, tutti diventano obbligatori. Almeno un lato deve essere completo prima di procedere.</p>
+      <p>Il colore #C8003B sostituisce il blu su tutti i componenti: focus degli input, ear-col-title, stepper attivo, accent checkbox.</p>
+      <span class="pill">📐 Pressione validata −400 / +200 daPa</span>
+    </div>
+    <div class="mockup">
+      <div class="m-stepper">
+        <div class="m-step done"><div class="m-dot">✓</div><span class="m-lbl">Intro</span></div>
+        <div class="m-step done"><div class="m-dot">✓</div><span class="m-lbl">Colab.</span></div>
+        <div class="m-step active"><div class="m-dot">3</div><span class="m-lbl">Oído</span></div>
+        <div class="m-step"><div class="m-dot">4</div><span class="m-lbl">Pruebas</span></div>
+        <div class="m-step"><div class="m-dot">5</div><span class="m-lbl">Cuest.</span></div>
+        <div class="m-step"><div class="m-dot">6</div><span class="m-lbl">Adapt.</span></div>
+        <div class="m-step"><div class="m-dot">7</div><span class="m-lbl">Concl.</span></div>
+        <div class="m-step"><div class="m-dot">8</div><span class="m-lbl">Notas</span></div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-title">3. The Ear <span class="mbadge">Mín. obligatorio</span></div>
+        <div class="mcol2">
+          <div>
+            <div class="mear-title">Left Ear</div>
+            <div class="mear-body">
+              <div class="mear-row"><span class="lbl">Otoscopy</span><span class="val">Normal</span></div>
+              <div style="font-size:6.5px;font-weight:700;color:#C8003B;text-transform:uppercase;padding:3px 0 1px">Tympanometry</div>
+              <div class="mear-row"><span class="lbl">Type</span><span class="val">A – Normal</span></div>
+              <div class="mear-row"><span class="lbl">Pressure</span><span class="val">15 daPa</span></div>
+            </div>
+          </div>
+          <div>
+            <div class="mear-title">Right Ear</div>
+            <div class="mear-body">
+              <div class="mear-row"><span class="lbl">Otoscopy</span><span class="val">Normal</span></div>
+              <div style="font-size:6.5px;font-weight:700;color:#C8003B;text-transform:uppercase;padding:3px 0 1px">Tympanometry</div>
+              <div class="mear-row"><span class="lbl">Type</span><span class="val">B – Sin mov.</span></div>
+              <div class="mear-row"><span class="lbl">Pressure</span><span class="val">−17 daPa</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="m-bottom">
+        <button class="mbtn mbtn-sec">← Anterior</button>
+        <button class="mbtn mbtn-pri">Siguiente →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-num">3</div>
+    <h2>Step 4 — Pruebas Diagnósticas</h2>
+    <span class="badge opt">Opzionale</span>
+  </div>
+  <div class="slide-body">
+    <div class="caption">
+      <p><strong>Potenciales Evocados</strong> con livello dB e badge Pass/No Pass per orecchio. <strong>Test de Ling</strong> con tabella 6 suoni × distanze selezionate: ● verde = sentito, ✕ rosso = non sentito.</p>
+      <p>Aggiungere o togliere una colonna distanza <strong>preserva i valori già inseriti</strong> grazie a <code>saveLingResults()</code> che sincronizza lo stato prima di ricostruire la tabella.</p>
+      <span class="pill">✅ Fix: lo stato Ling sopravvive al cambio colonne</span>
+    </div>
+    <div class="mockup">
+      <div class="m-stepper">
+        <div class="m-step done"><div class="m-dot">✓</div><span class="m-lbl">Intro</span></div>
+        <div class="m-step done"><div class="m-dot">✓</div><span class="m-lbl">Colab.</span></div>
+        <div class="m-step done"><div class="m-dot">✓</div><span class="m-lbl">Oído</span></div>
+        <div class="m-step active"><div class="m-dot">4</div><span class="m-lbl">Pruebas</span></div>
+        <div class="m-step"><div class="m-dot">5</div><span class="m-lbl">Cuest.</span></div>
+        <div class="m-step"><div class="m-dot">6</div><span class="m-lbl">Adapt.</span></div>
+        <div class="m-step"><div class="m-dot">7</div><span class="m-lbl">Concl.</span></div>
+        <div class="m-step"><div class="m-dot">8</div><span class="m-lbl">Notas</span></div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-title">4. Pruebas <span class="mbadge opt">Opcional</span></div>
+        <div class="mtoggle">
+          <div class="mtoggle-h">
+            <span><span class="mcheck-box on" style="display:inline-flex;margin-right:4px">✓</span>Potenciales Evocados</span><span>▾</span>
+          </div>
+          <div class="mtoggle-b">
+            <div class="mcol2">
+              <div>
+                <div style="font-size:7.5px;font-weight:700;text-align:center;background:#C8003B;color:#fff;padding:2px;border-radius:2px 2px 0 0">Left</div>
+                <div class="mear-body">
+                  <div class="mear-row"><span class="lbl">dB</span><span class="val">30 dB</span></div>
+                  <div class="mear-row"><span class="lbl">Result</span><span style="background:#d1fae5;color:#065f46;font-size:6.5px;font-weight:700;padding:0 3px;border-radius:2px">Pass</span></div>
+                </div>
+              </div>
+              <div>
+                <div style="font-size:7.5px;font-weight:700;text-align:center;background:#C8003B;color:#fff;padding:2px;border-radius:2px 2px 0 0">Right</div>
+                <div class="mear-body">
+                  <div class="mear-row"><span class="lbl">dB</span><span class="val">40 dB</span></div>
+                  <div class="mear-row"><span class="lbl">Result</span><span style="background:#fee2e2;color:#991b1b;font-size:6.5px;font-weight:700;padding:0 3px;border-radius:2px">No Pass</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mtoggle">
+          <div class="mtoggle-h">
+            <span><span class="mcheck-box on" style="display:inline-flex;margin-right:4px">✓</span>Test de Ling</span><span>▾</span>
+          </div>
+          <div class="mtoggle-b">
+            <div style="display:flex;gap:8px;margin-bottom:5px;font-size:8px">
+              <span><span class="mcheck-box on" style="display:inline-flex">✓</span> 1m</span>
+              <span><span class="mcheck-box on" style="display:inline-flex">✓</span> 2m</span>
+              <span><span class="mcheck-box" style="display:inline-flex"></span> 3–6m</span>
+            </div>
+            <table class="ling-t">
+              <thead><tr><th>Suono</th><th>1m</th><th>2m</th></tr></thead>
+              <tbody>
+                <tr><td class="s">/m/</td><td><span class="heard">●</span></td><td><span class="heard">●</span></td></tr>
+                <tr><td class="s">/u/</td><td><span class="heard">●</span></td><td><span class="notheard">✕</span></td></tr>
+                <tr><td class="s">/a/</td><td><span class="heard">●</span></td><td><span class="heard">●</span></td></tr>
+                <tr><td class="s">/i/</td><td><span class="notheard">✕</span></td><td><span class="notheard">✕</span></td></tr>
+                <tr><td class="s">/sh/</td><td><span class="heard">●</span></td><td><span class="notheard">✕</span></td></tr>
+                <tr><td class="s">/s/</td><td><span class="notheard">✕</span></td><td><span class="notheard">✕</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="m-bottom">
+        <button class="mbtn mbtn-sec">← Anterior</button>
+        <button class="mbtn mbtn-pri">Siguiente →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-num">4</div>
+    <h2>Step 7 — Conclusiones</h2>
+    <span class="badge">Obbligatorio</span>
+  </div>
+  <div class="slide-body">
+    <div class="caption">
+      <p>4 conclusioni cliniche realistiche in spagnolo (6–7 frasi): <em>no necesita audífonos</em>, <em>rechaza la adaptación</em>, <em>en período de prueba</em>, <em>ha adquirido los audífonos</em>. Il testo completo va direttamente nel PDF.</p>
+      <p>Flag opzionale per documentazione pendente: quando attivo compare un box rosso con il testo libero sia nell'UI che nel PDF.</p>
+      <span class="pill">✍️ Testo completo iniettato automaticamente nel PDF</span>
+    </div>
+    <div class="mockup">
+      <div class="m-stepper">
+        <div class="m-step done"><div class="m-dot">✓</div><span class="m-lbl">Intro</span></div>
+        <div class="m-step done"><div class="m-dot">✓</div><span class="m-lbl">Colab.</span></div>
+        <div class="m-step done"><div class="m-dot">✓</div><span class="m-lbl">Oído</span></div>
+        <div class="m-step done"><div class="m-dot">✓</div><span class="m-lbl">Pruebas</span></div>
+        <div class="m-step done"><div class="m-dot">✓</div><span class="m-lbl">Cuest.</span></div>
+        <div class="m-step done"><div class="m-dot">✓</div><span class="m-lbl">Adapt.</span></div>
+        <div class="m-step active"><div class="m-dot">7</div><span class="m-lbl">Concl.</span></div>
+        <div class="m-step"><div class="m-dot">8</div><span class="m-lbl">Notas</span></div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-title">7. Conclusiones <span class="mbadge">Obligatorio</span></div>
+        <div class="mfield">
+          <label>Conclusión</label>
+          <select class="msel on"><option>Ha adquirido los audífonos</option></select>
+        </div>
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:3px;padding:5px;font-size:7.5px;color:#166534;line-height:1.5;margin-bottom:6px">
+          Concluido satisfactoriamente el período de adaptación, el paciente ha adquirido los audífonos prescritos, mostrando una correcta tolerancia y un beneficio auditivo constatable…
+        </div>
+        <div class="mcheck"><span class="mcheck-box"></span> Documentación pendiente para la adaptación</div>
+      </div>
+      <div class="m-bottom">
+        <button class="mbtn mbtn-sec">← Anterior</button>
+        <button class="mbtn mbtn-pri">Siguiente →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-num">5</div>
+    <h2>Output — PDF generato con Puppeteer</h2>
+    <span class="badge" style="background:#fef3c7;color:#92400e">PDF · HTML · JSON</span>
+  </div>
+  <div class="slide-body">
+    <div class="caption">
+      <p>Dall'ultimo step si esporta in tre formati. Il <strong>PDF</strong> è generato server-side con Puppeteer su template Nunjucks.</p>
+      <p>L'header del PDF mostra il <strong>logo Amplifon reale</strong> (PNG embedded come base64 data URI — funziona offline), "INFORME PEDIÁTRICO" in rosso, e i dati del centro + audiologo a destra. Sezioni numerate con pallino rosso, tabelle con header #C8003B.</p>
+      <span class="pill">📄 Logo embed base64 — nessuna dipendenza da URL esterno</span>
+    </div>
+    <div class="mockup">
+      
+      <div class="m-stepper">
+        <div class="m-step done"><div class="m-dot">✓</div><span class="m-lbl">Intro</span></div>
+        <div class="m-step done"><div class="m-dot">✓</div><span class="m-lbl">Colab.</span></div>
+        <div class="m-step done"><div class="m-dot">✓</div><span class="m-lbl">Oído</span></div>
+        <div class="m-step done"><div class="m-dot">✓</div><span class="m-lbl">Pruebas</span></div>
+        <div class="m-step done"><div class="m-dot">✓</div><span class="m-lbl">Cuest.</span></div>
+        <div class="m-step done"><div class="m-dot">✓</div><span class="m-lbl">Adapt.</span></div>
+        <div class="m-step done"><div class="m-dot">✓</div><span class="m-lbl">Concl.</span></div>
+        <div class="m-step active"><div class="m-dot">8</div><span class="m-lbl">Notas</span></div>
+      </div>
+      <div class="m-bottom" style="border-radius:4px;margin-bottom:2px">
+        <button class="mbtn mbtn-sec">← Anterior</button>
+        <button class="mbtn mbtn-sec">Ver JSON</button>
+        <button class="mbtn mbtn-suc">Vista previa HTML</button>
+        <button class="mbtn mbtn-red">⬇ Descargar PDF</button>
+      </div>
+      
+      <div class="pdf-wrap">
+        <div class="pdf-header">
+          <div class="pdf-logo-block">
+            <div class="pdf-logo-row">
+              <div class="pdf-logo-circle">a</div>
+              <span class="pdf-logo-text">mplifon</span>
+            </div>
+            <div class="pdf-informe">Informe Pediátrico</div>
+          </div>
+          <div class="pdf-meta">
+            <div class="centre">GAES Junior — Amplifon Barcelona Sarrià</div>
+            <div>Carrer de Guillem Tell, 49 · 08006 Barcelona</div>
+            <div class="proname">Dra. Elena Martínez Soler</div>
+            <div>Especialista en audiología pediátrica</div>
+            <div style="color:#aaa;font-size:6.5px;margin-top:2px">Generado: 04/11/2026 · Pac.: PAT001</div>
+          </div>
+        </div>
+        <div class="pdf-body">
+          <div class="pdf-greeting">Estimado Dr. Mendoza,</div>
+          <div class="pdf-sec">
+            <div class="pdf-sec-title"><div class="pdf-sec-num">2</div>The Ear</div>
+            <div class="pdf-ear-grid">
+              <div>
+                <div class="pdf-ear-head">Left Ear</div>
+                <div class="pdf-ear-body">
+                  <div class="pdf-ear-row"><span class="lbl">Otoscopy</span><span class="val">Normal</span></div>
+                  <div style="font-size:5.5px;color:#C8003B;font-weight:700;text-transform:uppercase;padding:2px 0 1px">Tympanometry</div>
+                  <div class="pdf-ear-row"><span class="lbl">Type</span><span class="val">A – Normal</span></div>
+                  <div class="pdf-ear-row"><span class="lbl">Pressure</span><span class="val">15 daPa</span></div>
+                </div>
+              </div>
+              <div>
+                <div class="pdf-ear-head">Right Ear</div>
+                <div class="pdf-ear-body">
+                  <div class="pdf-ear-row"><span class="lbl">Otoscopy</span><span class="val">Normal</span></div>
+                  <div style="font-size:5.5px;color:#C8003B;font-weight:700;text-transform:uppercase;padding:2px 0 1px">Tympanometry</div>
+                  <div class="pdf-ear-row"><span class="lbl">Type</span><span class="val">B – Sin mov.</span></div>
+                  <div class="pdf-ear-row"><span class="lbl">Pressure</span><span class="val">−17 daPa</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pdf-sec">
+            <div class="pdf-sec-title"><div class="pdf-sec-num">4</div>Ling Test</div>
+            <table class="pdf-table">
+              <thead><tr><th></th><th>1m</th><th>2m</th></tr></thead>
+              <tbody>
+                <tr><td class="lbl">/m/</td><td><span style="color:#1a7a1a;font-weight:800">●</span></td><td><span style="color:#1a7a1a;font-weight:800">●</span></td></tr>
+                <tr><td class="lbl">/sh/</td><td><span style="color:#1a7a1a;font-weight:800">●</span></td><td><span style="color:#C8003B;font-weight:800">✕</span></td></tr>
+                <tr><td class="lbl">/s/</td><td><span style="color:#C8003B;font-weight:800">✕</span></td><td><span style="color:#C8003B;font-weight:800">✕</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pdf-sec">
+            <div class="pdf-sec-title"><div class="pdf-sec-num">7</div>Conclusiones</div>
+            <div class="pdf-conclusion">Concluido satisfactoriamente el período de adaptación, el paciente ha adquirido los audífonos prescritos, mostrando una correcta tolerancia y un beneficio auditivo constatable en su vida diaria…</div>
+          </div>
+          <div class="pdf-sig">
+            <div class="pdf-sig-name">Dra. Elena Martínez Soler</div>
+            <div style="font-size:6.5px;color:#777;font-style:italic">Especialista en audiología pediátrica</div>
+          </div>
+        </div>
+        <div class="pdf-footer-line">GAES Junior · Informe Pediátrico</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">Made with IBM Bob</div>
+
+</body>
+</html>

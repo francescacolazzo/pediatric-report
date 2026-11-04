@@ -1,0 +1,449 @@
+
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Informe Médico Pediátrico — Presentazione</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  background: #f0f2f5;
+  color: #1f2328;
+}
+
+/* ── Cover ── */
+.cover {
+  background: #1f2328;
+  color: #fff;
+  padding: 64px 40px 48px;
+  text-align: center;
+}
+.cover h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+.cover p  { color: #9ca3af; margin-top: 10px; font-size: 15px; }
+.cover .tag {
+  display: inline-block; margin-top: 24px;
+  background: #3b82d4; color: #fff;
+  padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+}
+
+/* ── Slide ── */
+.slide {
+  max-width: 960px; margin: 32px auto; background: #fff;
+  border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+.slide-header {
+  background: #f7f8fa; border-bottom: 1px solid #e5e7eb;
+  padding: 14px 24px; display: flex; align-items: center; gap: 12px;
+}
+.slide-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #3b82d4; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; flex-shrink: 0;
+}
+.slide-header h2 { font-size: 15px; font-weight: 700; }
+.slide-header .badge {
+  font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px;
+  background: #fee2e2; color: #991b1b;
+}
+.slide-header .badge.opt { background: #dbeafe; color: #1d4ed8; }
+
+.slide-body { display: grid; grid-template-columns: 1fr 340px; }
+
+.caption {
+  padding: 20px 24px; border-right: 1px solid #e5e7eb;
+  display: flex; flex-direction: column; justify-content: center; gap: 8px;
+}
+.caption p { font-size: 13.5px; line-height: 1.65; color: #374151; }
+.caption .highlight {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #eff6ff; border: 1px solid #bfdbfe;
+  color: #1e40af; font-size: 11px; font-weight: 600;
+  padding: 4px 10px; border-radius: 6px; margin-top: 4px; width: fit-content;
+}
+
+.mockup {
+  padding: 16px;
+  background: #f7f8fa;
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+/* ── Stepper mock ── */
+.stepper {
+  display: flex; gap: 0; overflow: hidden; border-radius: 6px;
+  border: 1px solid #e5e7eb; background: #fff; font-size: 9px;
+}
+.step { flex: 1; text-align: center; padding: 6px 2px; border-right: 1px solid #e5e7eb; }
+.step:last-child { border-right: none; }
+.step .dot {
+  width: 16px; height: 16px; border-radius: 50%; border: 2px solid #e5e7eb;
+  background: #fff; display: inline-flex; align-items: center; justify-content: center;
+  font-size: 8px; font-weight: 700; color: #57606a;
+}
+.step.active .dot { background: #3b82d4; border-color: #3b82d4; color: #fff; }
+.step.done   .dot { background: #10b981; border-color: #10b981; color: #fff; font-size: 10px; }
+.step-lbl { font-size: 8px; color: #57606a; margin-top: 3px; display: block; }
+.step.active .step-lbl { color: #3b82d4; font-weight: 600; }
+
+/* ── Card mock ── */
+.mcard {
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px;
+}
+.mcard-title { font-size: 11px; font-weight: 700; margin-bottom: 8px; display: flex; gap: 6px; align-items: center; }
+.mbadge { font-size: 8px; font-weight: 600; padding: 1px 5px; border-radius: 8px; background: #fee2e2; color: #991b1b; }
+.mbadge.opt { background: #dbeafe; color: #1d4ed8; }
+
+.mfield { margin-bottom: 7px; }
+.mfield label { display: block; font-size: 9px; font-weight: 600; color: #374151; margin-bottom: 2px; }
+.mselect, .minput, .mtextarea {
+  width: 100%; padding: 5px 7px; border: 1px solid #d1d5db; border-radius: 4px;
+  font-size: 10px; color: #1f2328; background: #fff;
+}
+.mselect.filled { border-color: #3b82d4; background: #eff6ff; }
+.minput.filled  { border-color: #3b82d4; background: #eff6ff; }
+.mtextarea { min-height: 40px; resize: none; }
+.mhint { font-size: 8px; color: #57606a; margin-top: 2px; }
+
+.mcol2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mcol-title { font-size: 9px; font-weight: 700; text-align: center; background: #f7f8fa; border-radius: 3px; padding: 3px; margin-bottom: 5px; }
+
+/* ── Ling table mock ── */
+.ling-t { width: 100%; border-collapse: collapse; font-size: 9px; margin-top: 4px; }
+.ling-t th { background: #f0f0f0; padding: 3px 5px; border: 1px solid #e5e7eb; font-weight: 600; text-align: center; }
+.ling-t td { padding: 3px 5px; border: 1px solid #e5e7eb; text-align: center; }
+.ling-t td.s { text-align: left; font-weight: 600; }
+.heard    { color: #1a7a1a; font-weight: 700; }
+.notheard { color: #cc2200; font-weight: 700; }
+
+/* ── Toggle mock ── */
+.mtoggle { border: 1px solid #e5e7eb; border-radius: 4px; overflow: hidden; margin-bottom: 6px; }
+.mtoggle-h { background: #f7f8fa; padding: 6px 8px; font-size: 10px; font-weight: 600; display: flex; justify-content: space-between; }
+.mtoggle-b { padding: 8px; }
+
+/* ── Btn row mock ── */
+.mbtn-row { display: flex; gap: 6px; justify-content: flex-end; margin-top: 6px; }
+.mbtn { padding: 5px 10px; border-radius: 4px; font-size: 9px; font-weight: 600; border: none; }
+.mbtn-secondary { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
+.mbtn-primary  { background: #3b82d4; color: #fff; }
+.mbtn-success  { background: #10b981; color: #fff; }
+.mbtn-danger   { background: #ef4444; color: #fff; }
+
+/* ── Check mock ── */
+.mcheck { display: flex; gap: 4px; align-items: center; font-size: 9px; margin-top: 3px; }
+.mcheck-box { width: 11px; height: 11px; border: 1.5px solid #d1d5db; border-radius: 2px; background: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 8px; }
+.mcheck-box.checked { background: #3b82d4; border-color: #3b82d4; color: #fff; }
+
+/* ── PDF preview mock ── */
+.pdf-mock {
+  background: #fff; border: 1px solid #e5e7eb; border-radius: 4px;
+  padding: 10px; font-size: 8.5px; line-height: 1.5;
+}
+.pdf-h { font-size: 11px; font-weight: 700; border-bottom: 2px solid #1a1a1a; padding-bottom: 4px; margin-bottom: 8px; display: flex; justify-content: space-between; }
+.pdf-meta { font-size: 7.5px; color: #555; text-align: right; }
+.pdf-sec-title { font-size: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; border-bottom: 1px solid #ccc; padding-bottom: 2px; margin: 6px 0 4px; }
+.pdf-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 8px; margin-bottom: 4px; }
+
+.footer {
+  text-align: center; padding: 32px 16px; color: #9ca3af; font-size: 11px;
+  border-top: 1px solid #e5e7eb; margin-top: 8px;
+}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>Informe Médico Pediátrico</h1>
+  <p>Applicazione web per la generazione di report audiologici pediatrici · v1</p>
+  <span class="tag">Node.js · Express · Nunjucks · Puppeteer</span>
+</div>
+
+
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-num">1</div>
+    <h2>Step 1 — Introduzione</h2>
+    <span class="badge">Obbligatorio</span>
+  </div>
+  <div class="slide-body">
+    <div class="caption">
+      <p>L'audiologo seleziona il tipo di destinatario del referto: medico specifico (cercato nel database Salesforce), ORL generico o altro professionista. Se sceglie "Médico", appare un menu con i dottori disponibili e l'opzione di nasconderne il nome.</p>
+      <span class="highlight">🔒 Il token JWT viene recuperato automaticamente — nessun login richiesto</span>
+    </div>
+    <div class="mockup">
+      <div class="stepper">
+        <div class="step active"><div class="dot">1</div><span class="step-lbl">Intro</span></div>
+        <div class="step"><div class="dot">2</div><span class="step-lbl">Colab.</span></div>
+        <div class="step"><div class="dot">3</div><span class="step-lbl">Oído</span></div>
+        <div class="step"><div class="dot">4</div><span class="step-lbl">Pruebas</span></div>
+        <div class="step"><div class="dot">5</div><span class="step-lbl">Cuest.</span></div>
+        <div class="step"><div class="dot">6</div><span class="step-lbl">Adapt.</span></div>
+        <div class="step"><div class="dot">7</div><span class="step-lbl">Concl.</span></div>
+        <div class="step"><div class="dot">8</div><span class="step-lbl">Notas</span></div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-title">1. Introducción <span class="mbadge">Obligatorio</span></div>
+        <div class="mfield">
+          <label>Tipo de destinatario</label>
+          <select class="mselect filled"><option>Médico (con búsqueda en base de datos)</option></select>
+        </div>
+        <div class="mfield">
+          <label>Médico destinatario</label>
+          <select class="mselect filled"><option>Dr. Mendoza — Otorrinolaringología</option></select>
+        </div>
+        <div class="mcheck">
+          <span class="mcheck-box"></span> Ocultar nombre en el informe
+        </div>
+      </div>
+      <div class="mbtn-row">
+        <button class="mbtn mbtn-secondary" style="opacity:.4">← Anterior</button>
+        <button class="mbtn mbtn-primary">Siguiente →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-num">2</div>
+    <h2>Step 3 — El Oído (otoscopia + timpanometria)</h2>
+    <span class="badge">Obbligatorio</span>
+  </div>
+  <div class="slide-body">
+    <div class="caption">
+      <p>Si inseriscono i risultati di otoscopia e timpanometria per orecchio sinistro e destro con una logica "tutto o niente": se si compila un campo di un lato, tutti gli altri diventano obbligatori. Almeno un orecchio deve essere compilato.</p>
+      <span class="highlight">📐 La pressione timpanometrica viene validata tra −400 e +200 daPa</span>
+    </div>
+    <div class="mockup">
+      <div class="stepper">
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Intro</span></div>
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Colab.</span></div>
+        <div class="step active"><div class="dot">3</div><span class="step-lbl">Oído</span></div>
+        <div class="step"><div class="dot">4</div><span class="step-lbl">Pruebas</span></div>
+        <div class="step"><div class="dot">5</div><span class="step-lbl">Cuest.</span></div>
+        <div class="step"><div class="dot">6</div><span class="step-lbl">Adapt.</span></div>
+        <div class="step"><div class="dot">7</div><span class="step-lbl">Concl.</span></div>
+        <div class="step"><div class="dot">8</div><span class="step-lbl">Notas</span></div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-title">3. El Oído <span class="mbadge">Mín. obligatorio</span></div>
+        <p class="mhint" style="margin-bottom:6px">Regla todo-o-nada. Al menos un lado debe completarse.</p>
+        <div class="mcol2">
+          <div>
+            <div class="mcol-title">🔵 Oído Izquierdo</div>
+            <div class="mfield"><label>Otoscopia</label>
+              <select class="mselect filled"><option>Normal</option></select></div>
+            <div class="mfield"><label>Tipo timpanometría</label>
+              <select class="mselect filled"><option>A – Movilidad normal</option></select></div>
+            <div class="mfield"><label>Presión (daPa)</label>
+              <input class="minput filled" /></div>
+          </div>
+          <div>
+            <div class="mcol-title">🔴 Oído Derecho</div>
+            <div class="mfield"><label>Otoscopia</label>
+              <select class="mselect"><option>— Omitir lado —</option></select></div>
+            <div class="mfield"><label>Tipo timpanometría</label>
+              <select class="mselect"><option>— Omitir lado —</option></select></div>
+            <div class="mfield"><label>Presión (daPa)</label>
+              <input class="minput" /></div>
+          </div>
+        </div>
+      </div>
+      <div class="mbtn-row">
+        <button class="mbtn mbtn-secondary">← Anterior</button>
+        <button class="mbtn mbtn-primary">Siguiente →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-num">3</div>
+    <h2>Step 4 — Pruebas diagnósticas</h2>
+    <span class="badge opt">Opzionale</span>
+  </div>
+  <div class="slide-body">
+    <div class="caption">
+      <p>Sezione opzionale con due test: <strong>Potenciales Evocados</strong> (livello dB e Pass/No Pass per orecchio) e <strong>Test de Ling</strong> (6 suoni × distanze selezionate). Aggiungere o rimuovere una colonna distanza preserva i valori già inseriti.</p>
+      <span class="highlight">🎯 La selezione dei checkbox Ling sopravvive al cambio delle colonne distanza</span>
+    </div>
+    <div class="mockup">
+      <div class="stepper">
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Intro</span></div>
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Colab.</span></div>
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Oído</span></div>
+        <div class="step active"><div class="dot">4</div><span class="step-lbl">Pruebas</span></div>
+        <div class="step"><div class="dot">5</div><span class="step-lbl">Cuest.</span></div>
+        <div class="step"><div class="dot">6</div><span class="step-lbl">Adapt.</span></div>
+        <div class="step"><div class="dot">7</div><span class="step-lbl">Concl.</span></div>
+        <div class="step"><div class="dot">8</div><span class="step-lbl">Notas</span></div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-title">4. Pruebas diagnósticas <span class="mbadge opt">Opcional</span></div>
+        <div class="mtoggle">
+          <div class="mtoggle-h">
+            <span><span class="mcheck-box checked" style="display:inline-flex">✓</span>  Potenciales Evocados</span>
+            <span>▾</span>
+          </div>
+          <div class="mtoggle-b">
+            <div class="mcol2">
+              <div>
+                <div class="mcol-title">🔵 Izq.</div>
+                <div class="mfield"><label>Nivel dB</label><select class="mselect filled"><option>30 dB</option></select></div>
+                <div class="mfield"><label>Resultado</label><select class="mselect filled"><option>PASS</option></select></div>
+              </div>
+              <div>
+                <div class="mcol-title">🔴 Der.</div>
+                <div class="mfield"><label>Nivel dB</label><select class="mselect filled"><option>40 dB</option></select></div>
+                <div class="mfield"><label>Resultado</label><select class="mselect filled"><option>NO PASS</option></select></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mtoggle">
+          <div class="mtoggle-h">
+            <span><span class="mcheck-box checked" style="display:inline-flex">✓</span>  Test de Ling (6 sonidos)</span>
+            <span>▾</span>
+          </div>
+          <div class="mtoggle-b">
+            <div style="display:flex;gap:10px;margin-bottom:6px;font-size:9px">
+              <span><span class="mcheck-box checked" style="display:inline-flex">✓</span> 1m</span>
+              <span><span class="mcheck-box checked" style="display:inline-flex">✓</span> 2m</span>
+              <span><span class="mcheck-box" style="display:inline-flex"></span> 3–6m</span>
+            </div>
+            <table class="ling-t">
+              <thead><tr><th>Sonido</th><th>1m</th><th>2m</th></tr></thead>
+              <tbody>
+                <tr><td class="s">/m/</td><td><span class="heard">✓</span></td><td><span class="heard">✓</span></td></tr>
+                <tr><td class="s">/u/</td><td><span class="heard">✓</span></td><td><span class="notheard">✗</span></td></tr>
+                <tr><td class="s">/a/</td><td><span class="heard">✓</span></td><td><span class="heard">✓</span></td></tr>
+                <tr><td class="s">/i/</td><td><span class="notheard">✗</span></td><td><span class="notheard">✗</span></td></tr>
+                <tr><td class="s">/sh/</td><td><span class="heard">✓</span></td><td><span class="notheard">✗</span></td></tr>
+                <tr><td class="s">/s/</td><td><span class="notheard">✗</span></td><td><span class="notheard">✗</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="mbtn-row">
+        <button class="mbtn mbtn-secondary">← Anterior</button>
+        <button class="mbtn mbtn-primary">Siguiente →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-num">4</div>
+    <h2>Step 7 — Conclusiones</h2>
+    <span class="badge">Obbligatorio</span>
+  </div>
+  <div class="slide-body">
+    <div class="caption">
+      <p>L'audiologo sceglie tra 4 conclusioni cliniche precompilate in spagnolo (6–7 frasi ciascuna): nessun bisogno di apparecchi, rifiuto della famiglia, inizio prova o acquisto completato. È possibile segnalare documentazione in sospeso.</p>
+      <span class="highlight">✍️ Il testo completo della conclusione va automaticamente nel PDF</span>
+    </div>
+    <div class="mockup">
+      <div class="stepper">
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Intro</span></div>
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Colab.</span></div>
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Oído</span></div>
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Pruebas</span></div>
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Cuest.</span></div>
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Adapt.</span></div>
+        <div class="step active"><div class="dot">7</div><span class="step-lbl">Concl.</span></div>
+        <div class="step"><div class="dot">8</div><span class="step-lbl">Notas</span></div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-title">7. Conclusiones <span class="mbadge">Obligatorio</span></div>
+        <div class="mfield">
+          <label>Conclusión</label>
+          <select class="mselect filled">
+            <option>Ha adquirido los audífonos</option>
+          </select>
+        </div>
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;padding:8px;font-size:8.5px;color:#166534;line-height:1.5;margin-bottom:8px">
+          Concluido satisfactoriamente el período de adaptación, el paciente ha adquirido los audífonos prescritos, mostrando una correcta tolerancia y un beneficio auditivo constatable en su vida diaria. Los dispositivos han sido programados y verificados mediante los protocolos de ajuste establecidos...
+        </div>
+        <div class="mcheck" style="margin-bottom:6px">
+          <span class="mcheck-box"></span> Documentación pendiente para la adaptación
+        </div>
+      </div>
+      <div class="mbtn-row">
+        <button class="mbtn mbtn-secondary">← Anterior</button>
+        <button class="mbtn mbtn-primary">Siguiente →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="slide">
+  <div class="slide-header">
+    <div class="slide-num">5</div>
+    <h2>Output — PDF generato con Puppeteer</h2>
+    <span class="badge" style="background:#fef3c7;color:#92400e">PDF / HTML / JSON</span>
+  </div>
+  <div class="slide-body">
+    <div class="caption">
+      <p>Dall'ultimo step si può esportare il referto in tre formati: <strong>PDF</strong> (scaricato direttamente), <strong>HTML</strong> (anteprima in una nuova scheda) o <strong>JSON</strong> grezzo. Il PDF è generato server-side con Puppeteer su un template Nunjucks.</p>
+      <span class="highlight">📄 Accept: application/pdf → Puppeteer · text/html → preview · application/json → raw doc</span>
+    </div>
+    <div class="mockup">
+      <div class="stepper">
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Intro</span></div>
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Colab.</span></div>
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Oído</span></div>
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Pruebas</span></div>
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Cuest.</span></div>
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Adapt.</span></div>
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Concl.</span></div>
+        <div class="step done"><div class="dot">✓</div><span class="step-lbl">Notas</span></div>
+      </div>
+      <div class="mcard">
+        <div class="mcard-title">8. Notas finales <span class="mbadge">Obligatorio</span></div>
+        <div class="mfield"><label>Notas</label>
+          <textarea class="mtextarea mselect filled" style="border-color:#3b82d4;background:#eff6ff">Se recomienda control en 6 meses y revisión de la programación...</textarea>
+        </div>
+      </div>
+      <div class="mbtn-row">
+        <button class="mbtn mbtn-secondary">← Anterior</button>
+        <button class="mbtn mbtn-secondary">Ver JSON</button>
+        <button class="mbtn mbtn-success">Vista previa HTML</button>
+        <button class="mbtn mbtn-danger">⬇ Descargar PDF</button>
+      </div>
+      <div class="pdf-mock">
+        <div class="pdf-h">
+          <span>Informe Médico Pediátrico</span>
+          <div class="pdf-meta">Generado: 04/11/2026<br />Paciente: PAT001</div>
+        </div>
+        <div style="font-size:8px;margin-bottom:6px">Estimado Dr. Mendoza,<br />Le remito el presente informe de valoración audiológica pediátrica.</div>
+        <div class="pdf-sec-title">Colaboración</div>
+        <div style="font-size:8px;margin-bottom:4px">Durante la valoración, el niño/a se ha mostrado colaborativo/a...</div>
+        <div class="pdf-sec-title">El Oído</div>
+        <div class="pdf-row">
+          <div><strong>Oído Izquierdo</strong><br />Otoscopia: Normal<br />Timpanometría: A · 15 daPa</div>
+          <div style="color:#aaa;font-style:italic">Oído Derecho: no evaluado</div>
+        </div>
+        <div class="pdf-sec-title">Test de Ling</div>
+        <div style="font-size:8px">✓ /m/ ✓ /a/ ✗ /i/ — a 1m y 2m</div>
+        <div class="pdf-sec-title">Conclusiones</div>
+        <div style="font-size:8px">Concluido satisfactoriamente el período de adaptación, el paciente ha adquirido los audífonos prescritos...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Made with IBM Bob
+</div>
+
+</body>
+</html>

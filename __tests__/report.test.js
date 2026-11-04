@@ -163,7 +163,7 @@ describe('POST /api/reports (HTML)', () => {
       .send(minimalReport);
     expect(res.status).toBe(201);
     expect(res.type).toMatch(/html/);
-    expect(res.text).toContain('Informe Médico Pediátrico');
+    expect(res.text).toContain('GAES Junior');
     expect(res.text).toContain('Estimado profesional');
     expect(res.text).toContain('Durante la valoración');
   });
@@ -193,10 +193,10 @@ describe('POST /api/reports (HTML)', () => {
       .set({ ...AUTH, Accept: 'text/html' })
       .send(payload);
     expect(res.status).toBe(201);
-    expect(res.text).toContain('Potenciales Evocados');
+    expect(res.text).toContain('Evoked Potentials');
     expect(res.text).toContain('30 dB');
-    expect(res.text).toContain('PASS');
-    expect(res.text).toContain('NO PASS');
+    expect(res.text).toContain('Pass');
+    expect(res.text).toContain('No Pass');
   });
 
   it('HTML contains ling test with selected distances only', async () => {
@@ -221,7 +221,7 @@ describe('POST /api/reports (HTML)', () => {
       .set({ ...AUTH, Accept: 'text/html' })
       .send(payload);
     expect(res.status).toBe(201);
-    expect(res.text).toContain('Test de Ling');
+    expect(res.text).toContain('Ling Test');
     expect(res.text).toContain('1m');
     expect(res.text).toContain('2m');
     expect(res.text).not.toContain('3-6m'); // distanza non selezionata
@@ -260,7 +260,7 @@ describe('POST /api/reports (HTML)', () => {
       .set({ ...AUTH, Accept: 'text/html' })
       .send(payload);
     expect(res.status).toBe(201);
-    expect(res.text).toContain('Información de Adaptación');
+    expect(res.text).toContain('Fitting Info');
     expect(res.text).toContain('PAA 010A');
     expect(res.text).toContain('REM/RECD');
   });

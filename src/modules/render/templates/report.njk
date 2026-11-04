@@ -2,310 +2,483 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Informe Médico Pediátrico</title>
+  <title>Informe Pediátrico</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: "Helvetica Neue", Arial, sans-serif;
-      font-size: 11pt;
+      font-size: 10.5pt;
       color: #1a1a1a;
-      padding: 32px 40px;
-      line-height: 1.55;
+      background: #fff;
     }
+
+    /* ── Page wrapper ── */
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      padding: 12mm 16mm 20mm 16mm;
+      position: relative;
+    }
+
     /* ── Header ── */
     .report-header {
-      border-bottom: 2px solid #1a1a1a;
-      padding-bottom: 12px;
-      margin-bottom: 24px;
       display: flex;
       justify-content: space-between;
-      align-items: flex-end;
+      align-items: flex-start;
+      border-bottom: 2px solid #C8003B;
+      padding-bottom: 10px;
+      margin-bottom: 16px;
     }
-    .report-header .title { font-size: 16pt; font-weight: 700; }
-    .report-header .meta  { font-size: 9pt; color: #555; text-align: right; }
 
-    /* ── Sections ── */
-    .section { margin-bottom: 24px; }
-    .section-title {
-      font-size: 12pt; font-weight: 700;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 4px;
-      margin-bottom: 10px;
-      text-transform: uppercase;
+    /* ── Logo GAES Junior ── */
+    .logo-block { display: flex; flex-direction: column; gap: 4px; }
+    .logo-svg-wrap svg { display: block; }
+    .informe-label {
+      font-size: 11pt;
+      font-weight: 900;
+      color: #C8003B;
       letter-spacing: 0.03em;
+      margin-top: 4px;
+      text-transform: uppercase;
     }
-    p { margin-bottom: 6px; }
+
+    /* ── Header DX — dati negozio e audiologo ── */
+    .header-meta {
+      text-align: right;
+      font-size: 8pt;
+      color: #555;
+      line-height: 1.65;
+    }
+    .header-meta .centre-name {
+      font-weight: 800;
+      font-size: 9pt;
+      color: #C8003B;
+    }
+    .header-meta .pro-name {
+      font-weight: 700;
+      font-size: 8.5pt;
+      color: #1a1a1a;
+    }
+    .header-meta .meta-sep {
+      border-top: 1px solid #e0e0e0;
+      margin: 4px 0;
+    }
+
+    /* ── Greeting bar ── */
+    .greeting-bar {
+      background: #fdf0f3;
+      border-left: 4px solid #C8003B;
+      padding: 6px 12px;
+      font-size: 10pt;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 14px;
+    }
+
+    /* ── Page number ── */
+    .page-num {
+      position: absolute;
+      bottom: 8mm;
+      right: 16mm;
+      font-size: 7.5pt;
+      color: #bbb;
+    }
+
+    /* ── Section ── */
+    .section { margin-bottom: 18px; }
+    .section-title {
+      font-size: 9.5pt;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-bottom: 1.5px solid #C8003B;
+      padding-bottom: 3px;
+      margin-bottom: 9px;
+      color: #1a1a1a;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .section-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #C8003B;
+      color: #fff;
+      font-size: 7.5pt;
+      font-weight: 800;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    p { margin-bottom: 5px; line-height: 1.55; }
+
+    /* ── Two-column grid ── */
+    .col2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* ── Ear block ── */
+    .ear-block-title {
+      font-size: 8.5pt;
+      font-weight: 700;
+      text-align: center;
+      background: #C8003B;
+      color: #fff;
+      padding: 4px 8px;
+      border-radius: 3px 3px 0 0;
+    }
+    .ear-inner {
+      border: 1px solid #e0b0bb;
+      border-top: none;
+      border-radius: 0 0 4px 4px;
+      padding: 8px 10px;
+      background: #fffafb;
+    }
+    .ear-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 0;
+      border-bottom: 1px solid #f0e0e4;
+      font-size: 9pt;
+    }
+    .ear-row:last-child { border-bottom: none; }
+    .ear-row .lbl { color: #777; font-size: 8.5pt; }
+    .ear-row .val { font-weight: 600; }
+    .ear-not-evaluated {
+      color: #bbb;
+      font-style: italic;
+      font-size: 8.5pt;
+      text-align: center;
+      padding: 12px 0;
+    }
+
+    /* ── Info row ── */
+    .info-row { font-size: 9pt; margin-bottom: 4px; }
+    .info-row .lbl { color: #777; }
+    .info-row .val { font-weight: 600; }
 
     /* ── Tables ── */
-    table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 10pt; }
+    table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 9pt; }
     th {
-      background: #f0f0f0; font-weight: 700;
-      padding: 5px 8px; border: 1px solid #ccc; text-align: center;
+      background: #C8003B;
+      color: #fff;
+      font-weight: 700;
+      padding: 5px 8px;
+      border: 1px solid #C8003B;
+      text-align: center;
+      font-size: 8.5pt;
     }
-    td { padding: 5px 8px; border: 1px solid #ccc; text-align: center; }
-    td.label { text-align: left; font-weight: 600; }
-
-    /* ── Ear grid ── */
-    .ear-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .ear-block .ear-title { font-weight: 700; margin-bottom: 4px; font-size: 10pt; }
+    td { padding: 5px 8px; border: 1px solid #e0e0e0; text-align: center; }
+    td.label {
+      text-align: left;
+      font-weight: 600;
+      color: #444;
+      background: #fdf5f6;
+      border-right: 1px solid #e0b0bb;
+    }
+    tr:nth-child(even) td { background: #fafafa; }
+    tr:nth-child(even) td.label { background: #faedef; }
 
     /* ── Ling ── */
-    .heard    { color: #1a7a1a; font-weight: 700; }
-    .not-heard{ color: #cc2200; font-weight: 700; }
+    .ling-heard     { color: #1a7a1a; font-weight: 800; font-size: 13pt; line-height: 1; }
+    .ling-not-heard { color: #C8003B; font-weight: 800; font-size: 13pt; line-height: 1; }
+    .ling-legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 5px;
+      font-size: 8pt;
+      color: #555;
+    }
+    .ling-legend span { display: flex; align-items: center; gap: 4px; }
 
-    /* ── COSI needs ── */
-    .cosi-need { padding: 4px 0; border-bottom: 1px dotted #ccc; }
+    /* ── COSI ── */
+    .cosi-needs { border: 1px solid #e0b0bb; border-radius: 4px; overflow: hidden; margin-top: 6px; }
+    .cosi-need {
+      padding: 5px 10px;
+      border-bottom: 1px dashed #e8c8ce;
+      font-size: 9pt;
+    }
     .cosi-need:last-child { border-bottom: none; }
+    .cosi-need .need-num { font-weight: 700; color: #C8003B; margin-right: 5px; }
 
-    /* ── Conclusions / notes ── */
-    .pending-box {
-      border-left: 3px solid #c00;
-      padding: 6px 10px;
-      background: #fff5f5;
+    /* ── Fitting ── */
+    .fitting-flag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #C8003B;
+      color: #fff;
+      font-size: 8pt;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 3px;
       margin-top: 8px;
-      font-size: 10pt;
     }
 
-    /* ── Footer / signature ── */
-    .final-notes-text { white-space: pre-wrap; font-size: 10pt; }
-    .closing-formula  { margin-top: 12px; font-style: italic; font-size: 10pt; }
-    .signature-block  {
-      margin-top: 32px; border-top: 1px solid #999;
-      padding-top: 8px; font-size: 10pt;
+    /* ── Pass / No Pass badges ── */
+    .badge-pass   { background: #d1fae5; color: #065f46; padding: 2px 8px; border-radius: 3px; font-weight: 700; font-size: 8pt; }
+    .badge-nopass { background: #fee2e2; color: #991b1b; padding: 2px 8px; border-radius: 3px; font-weight: 700; font-size: 8pt; }
+
+    /* ── Conclusions ── */
+    .conclusion-text {
+      font-size: 9.5pt;
+      line-height: 1.7;
+      text-align: justify;
     }
+    .pending-box {
+      border-left: 4px solid #C8003B;
+      padding: 6px 12px;
+      background: #fff0f2;
+      margin-top: 10px;
+      font-size: 9pt;
+      font-style: italic;
+      color: #7a0020;
+    }
+
+    /* ── Standard text ── */
+    .std-text {
+      font-size: 8.5pt;
+      color: #666;
+      line-height: 1.55;
+      margin-bottom: 7px;
+      font-style: italic;
+    }
+
+    /* ── Final notes ── */
+    .final-text { white-space: pre-wrap; font-size: 9.5pt; line-height: 1.6; }
+    .closing-formula { margin-top: 14px; font-style: italic; font-size: 9pt; color: #555; }
+    .signature-block {
+      margin-top: 24px;
+      padding-top: 8px;
+      border-top: 1px solid #ccc;
+      font-size: 9pt;
+    }
+    .sig-name  { font-weight: 700; font-size: 10pt; color: #1a1a1a; }
+    .sig-title { color: #777; font-style: italic; margin-top: 2px; }
 
     /* ── Print ── */
     @media print {
-      body { padding: 0; }
+      .page { padding: 10mm 14mm 18mm 14mm; }
       .section { page-break-inside: avoid; }
     }
   </style>
 </head>
 <body>
+<div class="page">
 
-  <!-- ── HEADER ─────────────────────────────────────────── -->
+  <!-- ══ HEADER ══════════════════════════════════════════════ -->
   <div class="report-header">
-    <div class="title">Informe Médico Pediátrico</div>
-    <div class="meta">
-      Generado: {{ generatedAt }}<br>
-      Paciente: {{ patientId }}
+
+    <!-- Logo GAES Junior (immagine reale) + etichetta -->
+    <div class="logo-block">
+      <img src="{{ amplifonLogoB64 }}" alt="GAES Junior — una marca amplifon" style="height:48px;display:block;">
+      <div class="informe-label">Informe Pediátrico</div>
+    </div>
+
+    <!-- Dati negozio + audiologo (mock SF) -->
+    <div class="header-meta">
+      <div class="centre-name">{{ centre.name }}</div>
+      <div>{{ centre.address }}</div>
+      <div>{{ centre.city }}</div>
+      <div>{{ centre.phone }}</div>
+      <div class="meta-sep"></div>
+      <div class="pro-name">{{ professional.fullName }}</div>
+      <div>{{ professional.title }}</div>
+      <div class="meta-sep"></div>
+      <div style="color:#aaa;font-size:7.5pt">Generado: {{ generatedAt }} &nbsp;·&nbsp; Pac.: {{ patientId }}</div>
     </div>
   </div>
 
-  <!-- ── INTRODUCTION ───────────────────────────────────── -->
-  <div class="section">
-    <p>{{ introduction.greeting }},</p>
-    <p>Le remito el presente informe de valoración audiológica pediátrica.</p>
-  </div>
+  <!-- ══ GREETING ═════════════════════════════════════════════ -->
+  <div class="greeting-bar">{{ introduction.greeting }},</div>
 
-  <!-- ── COLLABORATIVENESS ──────────────────────────────── -->
+  <!-- ══ COLLABORATIVENESS ════════════════════════════════════ -->
   <div class="section">
-    <div class="section-title">Colaboración</div>
+    <div class="section-title"><span class="section-num">1</span>Collaborativeness</div>
     <p>{{ collaborativeness.sentence }}</p>
   </div>
 
-  <!-- ── EAR ────────────────────────────────────────────── -->
+  <!-- ══ THE EAR ══════════════════════════════════════════════ -->
   {% if ear %}
   <div class="section">
-    <div class="section-title">El Oído</div>
+    <div class="section-title"><span class="section-num">2</span>The Ear</div>
+    <div class="col2">
 
-    <div class="ear-grid">
       {% if ear.left %}
-      <div class="ear-block">
-        <div class="ear-title">Oído Izquierdo</div>
-        <p><strong>Otoscopia:</strong> {{ ear.left.otoscopyLabel }}</p>
-        {% if ear.left.otoscopyImageUrl %}
-          <img src="{{ ear.left.otoscopyImageUrl }}" alt="Otoscopia izquierda" style="max-width:100%;margin:4px 0;">
-        {% endif %}
-        <p style="margin-top:8px"><strong>Timpanometría:</strong></p>
-        <table>
-          <tr><th>Tipo</th><th>Presión (daPa)</th></tr>
-          <tr>
-            <td>{{ ear.left.tympanometryLabel }}</td>
-            <td>{{ ear.left.tympanometryPressure }}</td>
-          </tr>
-        </table>
-        {% if ear.left.tympanometryImageUrl %}
-          <img src="{{ ear.left.tympanometryImageUrl }}" alt="Timpanometría izquierda" style="max-width:100%;margin:4px 0;">
-        {% endif %}
+      <div>
+        <div class="ear-block-title">Left Ear</div>
+        <div class="ear-inner">
+          <div class="ear-row"><span class="lbl">Otoscopy</span><span class="val">{{ ear.left.otoscopyLabel }}</span></div>
+          <div style="font-size:7.5pt;font-weight:700;color:#C8003B;text-transform:uppercase;letter-spacing:.06em;padding:5px 0 2px">Tympanometry</div>
+          <div class="ear-row"><span class="lbl">Type</span><span class="val">{{ ear.left.tympanometryLabel }}</span></div>
+          <div class="ear-row"><span class="lbl">Pressure</span><span class="val">{{ ear.left.tympanometryPressure }} daPa</span></div>
+        </div>
+      </div>
+      {% else %}
+      <div>
+        <div class="ear-block-title">Left Ear</div>
+        <div class="ear-inner"><div class="ear-not-evaluated">Not evaluated</div></div>
       </div>
       {% endif %}
 
       {% if ear.right %}
-      <div class="ear-block">
-        <div class="ear-title">Oído Derecho</div>
-        <p><strong>Otoscopia:</strong> {{ ear.right.otoscopyLabel }}</p>
-        {% if ear.right.otoscopyImageUrl %}
-          <img src="{{ ear.right.otoscopyImageUrl }}" alt="Otoscopia derecha" style="max-width:100%;margin:4px 0;">
-        {% endif %}
-        <p style="margin-top:8px"><strong>Timpanometría:</strong></p>
-        <table>
-          <tr><th>Tipo</th><th>Presión (daPa)</th></tr>
-          <tr>
-            <td>{{ ear.right.tympanometryLabel }}</td>
-            <td>{{ ear.right.tympanometryPressure }}</td>
-          </tr>
-        </table>
-        {% if ear.right.tympanometryImageUrl %}
-          <img src="{{ ear.right.tympanometryImageUrl }}" alt="Timpanometría derecha" style="max-width:100%;margin:4px 0;">
-        {% endif %}
+      <div>
+        <div class="ear-block-title">Right Ear</div>
+        <div class="ear-inner">
+          <div class="ear-row"><span class="lbl">Otoscopy</span><span class="val">{{ ear.right.otoscopyLabel }}</span></div>
+          <div style="font-size:7.5pt;font-weight:700;color:#C8003B;text-transform:uppercase;letter-spacing:.06em;padding:5px 0 2px">Tympanometry</div>
+          <div class="ear-row"><span class="lbl">Type</span><span class="val">{{ ear.right.tympanometryLabel }}</span></div>
+          <div class="ear-row"><span class="lbl">Pressure</span><span class="val">{{ ear.right.tympanometryPressure }} daPa</span></div>
+        </div>
+      </div>
+      {% else %}
+      <div>
+        <div class="ear-block-title">Right Ear</div>
+        <div class="ear-inner"><div class="ear-not-evaluated">Not evaluated</div></div>
       </div>
       {% endif %}
+
     </div>
   </div>
   {% endif %}
 
-  <!-- ── EVOKED POTENTIALS ──────────────────────────────── -->
+  <!-- ══ EVOKED POTENTIALS ════════════════════════════════════ -->
   {% if tests and tests.evokedPotentials %}
   <div class="section">
-    <div class="section-title">Potenciales Evocados</div>
-    <p>{{ tests.evokedPotentials.standardText }}</p>
-    <p style="margin-top:8px">
-      <strong>Realización:</strong>
-      {{ tests.evokedPotentials.performerLabel }}
-      {% if tests.evokedPotentials.specialistDate %}
-        {{ tests.evokedPotentials.specialistDate }}
-      {% endif %}
+    <div class="section-title"><span class="section-num">3</span>Evoked Potentials</div>
+    <p class="std-text">{{ tests.evokedPotentials.standardText }}</p>
+    <p class="info-row">
+      <span class="lbl">Performed by: </span>
+      <span class="val">{{ tests.evokedPotentials.performerLabel }}{% if tests.evokedPotentials.specialistDate %} — {{ tests.evokedPotentials.specialistDate }}{% endif %}</span>
     </p>
-    <table style="margin-top:8px">
-      <tr>
-        <th></th>
-        {% if tests.evokedPotentials.left %}<th>Oído Izquierdo</th>{% endif %}
-        {% if tests.evokedPotentials.right %}<th>Oído Derecho</th>{% endif %}
-      </tr>
-      <tr>
-        <td class="label">Nivel (dB)</td>
-        {% if tests.evokedPotentials.left %}<td>{{ tests.evokedPotentials.left.db }} dB</td>{% endif %}
-        {% if tests.evokedPotentials.right %}<td>{{ tests.evokedPotentials.right.db }} dB</td>{% endif %}
-      </tr>
-      <tr>
-        <td class="label">Resultado</td>
-        {% if tests.evokedPotentials.left %}<td>{{ tests.evokedPotentials.left.passLabel }}</td>{% endif %}
-        {% if tests.evokedPotentials.right %}<td>{{ tests.evokedPotentials.right.passLabel }}</td>{% endif %}
-      </tr>
+    <table>
+      <thead><tr>
+        <th style="width:36%"></th>
+        {% if tests.evokedPotentials.left %}<th>Left Ear</th>{% endif %}
+        {% if tests.evokedPotentials.right %}<th>Right Ear</th>{% endif %}
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="label">Decibels</td>
+          {% if tests.evokedPotentials.left %}<td>{{ tests.evokedPotentials.left.db }} dB</td>{% endif %}
+          {% if tests.evokedPotentials.right %}<td>{{ tests.evokedPotentials.right.db }} dB</td>{% endif %}
+        </tr>
+        <tr>
+          <td class="label">Pass / No Pass</td>
+          {% if tests.evokedPotentials.left %}
+            <td>{% if tests.evokedPotentials.left.pass %}<span class="badge-pass">Pass</span>{% else %}<span class="badge-nopass">No Pass</span>{% endif %}</td>
+          {% endif %}
+          {% if tests.evokedPotentials.right %}
+            <td>{% if tests.evokedPotentials.right.pass %}<span class="badge-pass">Pass</span>{% else %}<span class="badge-nopass">No Pass</span>{% endif %}</td>
+          {% endif %}
+        </tr>
+      </tbody>
     </table>
   </div>
   {% endif %}
 
-  <!-- ── LING TEST ───────────────────────────────────────── -->
+  <!-- ══ LING TEST ════════════════════════════════════════════ -->
   {% if tests and tests.lingTest %}
   <div class="section">
-    <div class="section-title">Test de Ling</div>
-    <p>{{ tests.lingTest.standardText }}</p>
-    <table style="margin-top:8px">
-      <tr>
-        <th>Sonido</th>
-        {% for dist in tests.lingTest.distances %}
-          <th>{{ dist }}</th>
+    <div class="section-title"><span class="section-num">4</span>Ling Test</div>
+    <p class="std-text">{{ tests.lingTest.standardText }}</p>
+    <table>
+      <thead><tr>
+        <th style="width:20%"></th>
+        {% for dist in tests.lingTest.distances %}<th>{{ dist }}</th>{% endfor %}
+      </tr></thead>
+      <tbody>
+        {% for row in tests.lingTest.rows %}
+        <tr>
+          <td class="label">{{ row.sound }}</td>
+          {% for cell in row.cells %}
+            <td>{% if cell.heard %}<span class="ling-heard">●</span>{% else %}<span class="ling-not-heard">✕</span>{% endif %}</td>
+          {% endfor %}
+        </tr>
         {% endfor %}
-      </tr>
-      {% for row in tests.lingTest.rows %}
-      <tr>
-        <td class="label">{{ row.sound }}</td>
-        {% for cell in row.cells %}
-          <td>
-            {% if cell.heard %}
-              <span class="heard">✓</span>
-            {% elif cell.heard == false %}
-              <span class="not-heard">✗</span>
-            {% else %}
-              —
-            {% endif %}
-          </td>
-        {% endfor %}
-      </tr>
-      {% endfor %}
+      </tbody>
     </table>
-    <p style="margin-top:6px;font-size:9pt;color:#555">
-      <span class="heard">✓</span> Escuchado &nbsp;&nbsp;
-      <span class="not-heard">✗</span> No escuchado
-    </p>
+    <div class="ling-legend">
+      <span><span class="ling-heard">●</span> Heard</span>
+      <span><span class="ling-not-heard">✕</span> Not heard</span>
+    </div>
   </div>
   {% endif %}
 
-  <!-- ── QUESTIONNAIRE ──────────────────────────────────── -->
+  <!-- ══ QUESTIONNAIRE ════════════════════════════════════════ -->
   {% if questionnaire %}
   <div class="section">
-    <div class="section-title">Cuestionario</div>
+    <div class="section-title"><span class="section-num">5</span>Questionnaire</div>
     <p>{{ questionnaire.sentence }}</p>
-
     {% if questionnaire.cosi %}
-      <p style="margin-top:6px"><strong>Sesión:</strong> {{ questionnaire.cosi.sessionDate }}</p>
-      <div style="margin-top:6px">
+      <p class="info-row" style="margin-top:5px"><span class="lbl">Session date: </span><span class="val">{{ questionnaire.cosi.sessionDate }}</span></p>
+      <div class="cosi-needs">
         {% for need in questionnaire.cosi.needs %}
-          <div class="cosi-need">{{ loop.index }}. {{ need }}</div>
+          <div class="cosi-need"><span class="need-num">{{ loop.index }}.</span>{{ need }}</div>
         {% endfor %}
       </div>
     {% else %}
-      <p style="margin-top:6px">{{ questionnaire.notes }}</p>
+      {% if questionnaire.notes %}<p style="margin-top:5px;font-size:9.5pt">{{ questionnaire.notes }}</p>{% endif %}
     {% endif %}
   </div>
   {% endif %}
 
-  <!-- ── FITTING ─────────────────────────────────────────── -->
+  <!-- ══ FITTING INFO ═════════════════════════════════════════ -->
   {% if fitting %}
   <div class="section">
-    <div class="section-title">Información de Adaptación</div>
+    <div class="section-title"><span class="section-num">6</span>Fitting Info</div>
     <table>
-      <tr>
-        <th></th>
-        {% if fitting.left %}<th>Oído Izquierdo</th>{% endif %}
-        {% if fitting.right %}<th>Oído Derecho</th>{% endif %}
-      </tr>
-      <tr>
-        <td class="label">Tipo de audífono</td>
-        {% if fitting.left %}<td>{{ fitting.left.hearingAidLabel }}</td>{% endif %}
-        {% if fitting.right %}<td>{{ fitting.right.hearingAidLabel }}</td>{% endif %}
-      </tr>
-      <tr>
-        <td class="label">Código</td>
-        {% if fitting.left %}<td>{{ fitting.left.hearingAidCode }}</td>{% endif %}
-        {% if fitting.right %}<td>{{ fitting.right.hearingAidCode }}</td>{% endif %}
-      </tr>
-      {% if (fitting.left and fitting.left.earmoldLabel) or (fitting.right and fitting.right.earmoldLabel) %}
-      <tr>
-        <td class="label">Tipo de molde</td>
-        {% if fitting.left %}<td>{{ fitting.left.earmoldLabel or '—' }}</td>{% endif %}
-        {% if fitting.right %}<td>{{ fitting.right.earmoldLabel or '—' }}</td>{% endif %}
-      </tr>
-      <tr>
-        <td class="label">Código molde</td>
-        {% if fitting.left %}<td>{{ fitting.left.earmoldCode or '—' }}</td>{% endif %}
-        {% if fitting.right %}<td>{{ fitting.right.earmoldCode or '—' }}</td>{% endif %}
-      </tr>
-      {% endif %}
-      {% if (fitting.left and fitting.left.remRecdVerified) or (fitting.right and fitting.right.remRecdVerified) %}
-      <tr>
-        <td class="label">Verificación REM/RECD</td>
-        {% if fitting.left %}<td>{{ 'Sí' if fitting.left.remRecdVerified else '—' }}</td>{% endif %}
-        {% if fitting.right %}<td>{{ 'Sí' if fitting.right.remRecdVerified else '—' }}</td>{% endif %}
-      </tr>
-      {% endif %}
+      <thead><tr>
+        <th style="width:36%"></th>
+        {% if fitting.left %}<th>Left Ear</th>{% endif %}
+        {% if fitting.right %}<th>Right Ear</th>{% endif %}
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="label">Tipo de audífono</td>
+          {% if fitting.left %}<td>{{ fitting.left.hearingAidLabel }}<br><span style="color:#aaa;font-size:7.5pt">{{ fitting.left.hearingAidCode }}</span></td>{% endif %}
+          {% if fitting.right %}<td>{{ fitting.right.hearingAidLabel }}<br><span style="color:#aaa;font-size:7.5pt">{{ fitting.right.hearingAidCode }}</span></td>{% endif %}
+        </tr>
+        {% if (fitting.left and fitting.left.earmoldLabel) or (fitting.right and fitting.right.earmoldLabel) %}
+        <tr>
+          <td class="label">Tipo de molde</td>
+          {% if fitting.left %}<td>{{ fitting.left.earmoldLabel or '—' }}{% if fitting.left.earmoldCode %}<br><span style="color:#aaa;font-size:7.5pt">{{ fitting.left.earmoldCode }}</span>{% endif %}</td>{% endif %}
+          {% if fitting.right %}<td>{{ fitting.right.earmoldLabel or '—' }}{% if fitting.right.earmoldCode %}<br><span style="color:#aaa;font-size:7.5pt">{{ fitting.right.earmoldCode }}</span>{% endif %}</td>{% endif %}
+        </tr>
+        {% endif %}
+      </tbody>
     </table>
+    {% if (fitting.left and fitting.left.remRecdVerified) or (fitting.right and fitting.right.remRecdVerified) %}
+      <div><span class="fitting-flag">✓ Fitted with REM/RECD</span></div>
+    {% endif %}
   </div>
   {% endif %}
 
-  <!-- ── CONCLUSIONS ────────────────────────────────────── -->
+  <!-- ══ CONCLUSIONES ═════════════════════════════════════════ -->
   {% if conclusions %}
   <div class="section">
-    <div class="section-title">Conclusiones</div>
-    <p>{{ conclusions.phrase }}</p>
+    <div class="section-title"><span class="section-num">7</span>Conclusiones</div>
+    <p class="conclusion-text">{{ conclusions.phrase }}</p>
     {% if conclusions.pendingText %}
       <div class="pending-box">{{ conclusions.pendingText }}</div>
     {% endif %}
   </div>
   {% endif %}
 
-  <!-- ── FINAL NOTES ────────────────────────────────────── -->
+  <!-- ══ FINAL NOTES ══════════════════════════════════════════ -->
   <div class="section">
-    <div class="section-title">Notas Finales</div>
-    <p class="final-notes-text">{{ finalNotes.text }}</p>
+    <div class="section-title"><span class="section-num">8</span>Final Notes</div>
+    <p class="final-text">{{ finalNotes.text }}</p>
     <p class="closing-formula">{{ finalNotes.closingFormula }}</p>
     <div class="signature-block">
-      {{ finalNotes.signature }}<br>
-      <em>Especialista en audiología pediátrica</em>
+      <div class="sig-name">{{ finalNotes.signature }}</div>
+      <div class="sig-title">Especialista en audiología pediátrica</div>
     </div>
   </div>
 
+  <div class="page-num">GAES Junior · Informe Pediátrico</div>
+
+</div>
 </body>
 </html>

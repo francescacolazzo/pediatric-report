@@ -1,5 +1,6 @@
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { readFileSync } from 'fs';
 import nunjucks from 'nunjucks';
 import puppeteer from 'puppeteer';
 import { renderIntroduction } from '../sections/introduction/index.js';
@@ -14,6 +15,12 @@ import { renderFinalNotes } from '../sections/finalNotes/index.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const TEMPLATES_DIR = path.join(__dirname, 'templates');
+
+const __publicDir = path.join(__dirname, '..', '..', '..', 'public');
+const AMPLIFON_LOGO_B64 = (() => {
+  const buf = readFileSync(path.join(__publicDir, 'images', 'amplifon-logo.png'));
+  return `data:image/png;base64,${buf.toString('base64')}`;
+})();
 
 const env = nunjucks.configure(TEMPLATES_DIR, { autoescape: true });
 
@@ -33,6 +40,9 @@ function buildTemplateContext(doc) {
     generatedAt: new Date(doc.generatedAt).toLocaleDateString('es-ES', {
       day: '2-digit', month: '2-digit', year: 'numeric',
     }),
+    professional:     doc.professional,
+    centre:           doc.centre,
+    amplifonLogoB64:  AMPLIFON_LOGO_B64,
     introduction:     renderIntroduction(doc.introduction),
     collaborativeness: renderCollaborativeness(doc.collaborativeness),
     ear:              renderEar(doc.ear),

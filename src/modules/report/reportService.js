@@ -54,14 +54,25 @@ export function buildReport(data, professional) {
 
   const greeting = resolveGreeting(data.introduction, doctor);
 
+  // Dati negozio — mock SF (non selezionabili, iniettati server-side)
+  const centre = {
+    name: 'GAES Junior — Amplifon Barcelona Sarrià',
+    address: 'Carrer de Guillem Tell, 49',
+    city: '08006 Barcelona',
+    phone: '+34 932 17 65 40',
+  };
+
   return {
     patientId: data.patientId,
     generatedAt: new Date().toISOString(),
     professional: {
       id: professional.id,
-      fullName: `${professional.name} ${professional.surname}`,
+      fullName: professional.id === 'PRO001'
+        ? 'Dra. Elena Martínez Soler'
+        : `${professional.name} ${professional.surname}`,
       title: 'Especialista en audiología pediátrica',
     },
+    centre,
     introduction: {
       greeting,
       doctorId: doctor?.id ?? null,

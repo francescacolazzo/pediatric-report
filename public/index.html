@@ -3,27 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Informe Médico Pediátrico — Demo</title>
+<title>GAES Junior — Informe Pediátrico</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, "Segoe UI", system-ui, sans-serif; font-size: 14px; background: #f5f6f8; color: #1f2328; min-height: 100vh; }
 
-.shell { max-width: 720px; margin: 0 auto; padding: 24px 16px 56px; }
-header { margin-bottom: 24px; }
-header h1 { font-size: 20px; font-weight: 700; }
-header p  { color: #57606a; font-size: 13px; margin-top: 2px; }
+/* ── Layout full-page ── */
+body {
+  font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  background: #f5f6f8;
+  color: #1f2328;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Top navbar ── */
+.navbar {
+  background: #fff;
+  border-bottom: 3px solid #C8003B;
+  padding: 0 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.navbar-logo-text {
+  font-size: 17px;
+  font-weight: 900;
+  color: #C8003B;
+  letter-spacing: -0.3px;
+}
+.navbar-logo-text span {
+  font-weight: 400;
+  font-size: 10px;
+  color: #888;
+  display: block;
+  letter-spacing: 0;
+  line-height: 1;
+}
+.navbar-pro {
+  font-size: 12px;
+  color: #57606a;
+  text-align: right;
+}
+.navbar-pro strong { color: #1f2328; display: block; }
+
+/* ── Scroll area ── */
+.main-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 24px 100px;
+}
+.shell {
+  max-width: 800px;
+  margin: 0 auto;
+}
 
 /* ── Stepper ── */
-.stepper { display: flex; margin-bottom: 28px; overflow-x: auto; }
-.step-item { flex: 1; text-align: center; position: relative; min-width: 60px; }
+.stepper { display:flex; margin-bottom:24px; overflow-x:auto; }
+.step-item { flex:1; text-align:center; position:relative; min-width:56px; }
 .step-item::after { content:''; position:absolute; top:14px; left:50%; width:100%; height:2px; background:#e5e7eb; z-index:0; }
 .step-item:last-child::after { display:none; }
 .step-dot { width:28px; height:28px; border-radius:50%; border:2px solid #e5e7eb; background:#fff; display:inline-flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; position:relative; z-index:1; color:#57606a; }
-.step-item.active .step-dot { background:#3b82d4; border-color:#3b82d4; color:#fff; }
+.step-item.active .step-dot { background:#C8003B; border-color:#C8003B; color:#fff; }
 .step-item.done   .step-dot { background:#10b981; border-color:#10b981; color:#fff; }
 .step-item.done::after { background:#10b981; }
 .step-label { font-size:10px; color:#57606a; margin-top:4px; display:block; }
-.step-item.active .step-label { color:#3b82d4; font-weight:600; }
+.step-item.active .step-label { color:#C8003B; font-weight:600; }
 
 /* ── Card ── */
 .card { background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding:24px; margin-bottom:16px; }
@@ -38,20 +95,20 @@ header p  { color: #57606a; font-size: 13px; margin-top: 2px; }
   width:100%; padding:8px 10px; border:1px solid #d1d5db; border-radius:6px;
   font-size:13px; font-family:inherit; background:#fff; color:#1f2328; transition:border-color .15s;
 }
-.field select:focus, .field input:focus, .field textarea:focus { outline:none; border-color:#3b82d4; box-shadow:0 0 0 3px rgba(59,130,212,.15); }
+.field select:focus, .field input:focus, .field textarea:focus { outline:none; border-color:#C8003B; box-shadow:0 0 0 3px rgba(200,0,59,.12); }
 .field textarea { resize:vertical; min-height:72px; }
 .field-row  { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 .checkbox-label { display:flex; gap:6px; align-items:center; cursor:pointer; font-size:13px; margin-top:4px; }
-.checkbox-label input { width:15px; height:15px; cursor:pointer; }
+.checkbox-label input { width:15px; height:15px; cursor:pointer; accent-color:#C8003B; }
 .hint { font-size:11px; color:#57606a; margin-top:3px; }
 
 /* ── Ear grid ── */
 .ear-cols { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-.ear-col-title { font-size:12px; font-weight:700; text-align:center; padding:4px; background:#f7f8fa; border-radius:4px; margin-bottom:10px; }
+.ear-col-title { font-size:12px; font-weight:700; text-align:center; padding:5px; background:#C8003B; color:#fff; border-radius:4px; margin-bottom:10px; }
 
 /* ── Ling ── */
 .ling-table { width:100%; border-collapse:collapse; font-size:12px; margin-top:8px; }
-.ling-table th { background:#f7f8fa; padding:5px 8px; border:1px solid #e5e7eb; font-weight:600; text-align:center; }
+.ling-table th { background:#fdf0f3; padding:5px 8px; border:1px solid #e5e7eb; font-weight:600; text-align:center; color:#C8003B; }
 .ling-table td { padding:4px 8px; border:1px solid #e5e7eb; text-align:center; }
 .ling-table td.sound { font-weight:600; text-align:left; }
 
@@ -64,21 +121,33 @@ header p  { color: #57606a; font-size: 13px; margin-top: 2px; }
 .toggle-body { padding:14px; display:none; }
 .toggle-body.open { display:block; }
 
-/* ── Buttons ── */
-.btn-row { display:flex; gap:10px; justify-content:flex-end; margin-top:20px; align-items:center; }
-.btn { padding:9px 20px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; border:none; transition:opacity .15s, background .15s; }
+/* ── Fixed bottom bar ── */
+.bottom-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #fff;
+  border-top: 1px solid #e5e7eb;
+  padding: 12px 24px;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  align-items: center;
+  z-index: 100;
+  box-shadow: 0 -2px 8px rgba(0,0,0,.06);
+}
+.btn { padding:10px 22px; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; border:none; transition:opacity .15s, background .15s; }
 .btn:disabled { opacity:.4; cursor:not-allowed; }
 .btn-secondary { background:#f3f4f6; color:#374151; border:1px solid #d1d5db; }
 .btn-secondary:hover:not(:disabled) { background:#e5e7eb; }
-.btn-primary  { background:#3b82d4; color:#fff; }
-.btn-primary:hover:not(:disabled) { background:#2563af; }
+.btn-primary  { background:#C8003B; color:#fff; }
+.btn-primary:hover:not(:disabled) { background:#a0002e; }
 .btn-success  { background:#10b981; color:#fff; }
 .btn-success:hover:not(:disabled) { background:#059669; }
-.btn-danger   { background:#ef4444; color:#fff; }
-.btn-danger:hover:not(:disabled)  { background:#dc2626; }
+.btn-danger   { background:#C8003B; color:#fff; }
+.btn-danger:hover:not(:disabled)  { background:#a0002e; }
 
 /* ── Validation hint ── */
-.val-hint { font-size:11px; color:#92400e; background:#fffbeb; border:1px solid #fde68a; border-radius:4px; padding:6px 10px; margin-top:8px; display:none; }
+.val-hint { font-size:11px; color:#92400e; background:#fffbeb; border:1px solid #fde68a; border-radius:4px; padding:6px 10px; display:none; flex-shrink:1; }
 .val-hint.show { display:block; }
 
 /* ── Alerts ── */
@@ -89,31 +158,90 @@ header p  { color: #57606a; font-size: 13px; margin-top: 2px; }
 /* ── COSI ── */
 .cosi-need label { font-size:11px; font-weight:600; color:#57606a; margin-bottom:3px; display:block; }
 .cosi-need { margin-bottom:8px; }
+
+/* ── Preview step ── */
+.preview-wrapper {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.preview-header {
+  background: #f7f8fa;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.preview-header-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1f2328;
+}
+.preview-header-sub {
+  font-size: 11px;
+  color: #57606a;
+  margin-top: 2px;
+}
+.preview-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 60px 24px;
+  color: #57606a;
+  font-size: 13px;
+}
+.spinner {
+  width: 20px; height: 20px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #C8003B;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+#preview-iframe {
+  display: block;
+  width: 100%;
+  border: none;
+  height: 70vh;
+  min-height: 500px;
+}
 </style>
 </head>
 <body>
 
-<!-- MAIN -->
-<div id="main-flow">
-<div class="shell">
-  <header>
-    <h1>Informe Médico Pediátrico</h1>
-    <p id="pro-label"></p>
-  </header>
+<!-- ── NAVBAR ── -->
+<nav class="navbar">
+  <div class="navbar-logo">
+    <img src="/images/amplifon-logo.png" alt="Amplifon" style="height:32px;display:block;">
+  </div>
+  <div class="navbar-pro">
+    <strong id="pro-label">—</strong>
+    GAES Junior — Amplifon Barcelona Sarrià
+  </div>
+</nav>
 
+<!-- ── SCROLL AREA ── -->
+<div class="main-scroll">
+<div class="shell">
   <div class="stepper" id="stepper"></div>
   <div id="global-error" class="alert alert-error" style="display:none"></div>
   <div id="steps-container"></div>
-
-  <div class="btn-row">
-    <span id="val-hint" class="val-hint"></span>
-    <button class="btn btn-secondary" id="btn-back"   onclick="prevStep()">← Anterior</button>
-    <button class="btn btn-primary"   id="btn-next"   onclick="nextStep()">Siguiente →</button>
-    <button class="btn btn-secondary" id="btn-json"   style="display:none" onclick="submitReport('json')">Ver JSON</button>
-    <button class="btn btn-success"   id="btn-html"   style="display:none" onclick="submitReport('html')">Vista previa HTML</button>
-    <button class="btn btn-danger"    id="btn-pdf"    style="display:none" onclick="submitReport('pdf')">⬇ Descargar PDF</button>
-  </div>
 </div>
+</div>
+
+<!-- ── FIXED BOTTOM BAR ── -->
+<div class="bottom-bar">
+  <span id="val-hint" class="val-hint"></span>
+  <button class="btn btn-secondary" id="btn-back"   onclick="prevStep()">← Anterior</button>
+  <button class="btn btn-primary"   id="btn-next"   onclick="nextStep()">Siguiente →</button>
+  <button class="btn btn-secondary" id="btn-json"   style="display:none" onclick="submitReport('json')">Ver JSON</button>
+  <button class="btn btn-success"   id="btn-html"   style="display:none" onclick="submitReport('html')">Vista previa HTML</button>
+  <button class="btn btn-danger"    id="btn-pdf"    style="display:none" onclick="submitReport('pdf')">⬇ Descargar PDF</button>
 </div>
 
 <script>
@@ -171,41 +299,23 @@ const STEPS = [
   { id:'fitting',           label:'Adaptación',    required: false },
   { id:'conclusions',       label:'Conclusiones',  required: true  },
   { id:'finalNotes',        label:'Notas finales', required: true  },
+  { id:'preview',           label:'Vista previa',  required: false },
 ];
 
 // ═══════════════════════════════════════════════════════════════
 // INIT — token automatico all'avvio, nessun login
 // ═══════════════════════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', async () => {
-poi  // Riusa il token salvato se ancora valido, altrimenti ne genera uno nuovo
-  const stored = localStorage.getItem('ped_report_token');
-  if (stored && isTokenValid(stored)) {
-    TOKEN = stored;
-  } else {
-    const d = await fetch('/mock/sf/token').then(r => r.json());
-    TOKEN = d.token;
-    localStorage.setItem('ped_report_token', TOKEN);
-  }
+  const d = await fetch('/mock/sf/token').then(r => r.json());
+  TOKEN = d.token;
   await init();
 });
 
-/** Controlla che il token JWT non sia scaduto. */
-function isTokenValid(token) {
-  try {
-    const { exp } = JSON.parse(atob(token.split('.')[1]));
-    return exp * 1000 > Date.now() + 60_000; // almeno 1 min di margine
-  } catch { return false; }
-}
-
 async function init() {
-  try {
-    const payload = JSON.parse(atob(TOKEN.split('.')[1]));
-    document.getElementById('pro-label').textContent =
-      `Profesional: ${payload.name} ${payload.surname}`;
-  } catch {}
+  document.getElementById('pro-label').textContent = 'Dra. Elena Martínez';
   const [dr, cs] = await Promise.all([
-    apiFetch('/mock/sf/doctors').then(r => r.json()),
-    apiFetch(`/mock/sf/patients/${PATIENT_ID}/cosi`).then(r => r.json()),
+    fetch('/mock/sf/doctors').then(r => r.json()),
+    fetch(`/mock/sf/patients/${PATIENT_ID}/cosi`).then(r => r.json()),
   ]);
   doctors = dr;
   cosiSessions = cs;
@@ -240,11 +350,12 @@ function updateStepper() {
 function renderStep(idx) {
   currentStep = idx;
   updateStepper();
-  const isLast = idx === STEPS.length - 1;
+  const isPreview = STEPS[idx].id === 'preview';
+  const isLast    = idx === STEPS.length - 1;
   document.getElementById('btn-next').style.display   = isLast ? 'none' : '';
-  document.getElementById('btn-json').style.display   = isLast ? '' : 'none';
-  document.getElementById('btn-html').style.display   = isLast ? '' : 'none';
-  document.getElementById('btn-pdf').style.display    = isLast ? '' : 'none';
+  document.getElementById('btn-json').style.display   = isPreview ? '' : 'none';
+  document.getElementById('btn-html').style.display   = 'none';
+  document.getElementById('btn-pdf').style.display    = isPreview ? '' : 'none';
   document.getElementById('btn-back').disabled        = idx === 0;
   document.getElementById('global-error').style.display = 'none';
 
@@ -252,11 +363,13 @@ function renderStep(idx) {
     introduction: renderIntroduction, collaborativeness: renderCollaborativeness,
     ear: renderEar, tests: renderTests, questionnaire: renderQuestionnaire,
     fitting: renderFitting, conclusions: renderConclusions, finalNotes: renderFinalNotes,
+    preview: renderPreview,
   };
   document.getElementById('steps-container').innerHTML = renders[STEPS[idx].id]();
   restoreState(STEPS[idx].id);
   bindLiveValidation();
-  validateStep();       // sets btn-next enabled/disabled immediately
+  validateStep();
+  if (isPreview) loadPreview();
 }
 
 function nextStep() {
@@ -380,15 +493,7 @@ function restoreState(stepId) {
     ch('ling-1m',  STATE.ling_1m);
     ch('ling-2m',  STATE.ling_2m);
     ch('ling-36m', STATE.ling_36m);
-    buildLingTable();
-    // Restore ling checked
-    const sounds = ['/m/','/u/','/a/','/i/','/sh/','/s/'];
-    sounds.forEach(s2 => {
-      Object.entries(STATE.ling_results[s2] || {}).forEach(([d, v]) => {
-        const el = document.getElementById(`ling-${s2.replace(/\//g,'')}-${d}`);
-        if (el) el.checked = v;
-      });
-    });
+    buildLingTable(); // restores checked state from STATE.ling_results internally
   }
   if (stepId === 'questionnaire') {
     s('q-type', STATE.q_type); toggleQuestionnaire();
@@ -546,6 +651,9 @@ function validateStep() {
     if (!document.getElementById('final-notes')?.value?.trim())
       msg = 'Las notas finales son obligatorias.';
   }
+
+  // preview step — always valid, no form fields
+  // (stepId === 'preview') → msg stays ''
 
   const valid = !msg;
   if (hint) { hint.textContent = msg; hint.classList.toggle('show', !!msg); }
@@ -725,9 +833,9 @@ function renderTests() {
         <div class="field">
           <label>Distancias testadas (selecciona al menos una)</label>
           <div style="display:flex;gap:16px;margin-top:4px">
-            <label class="checkbox-label"><input type="checkbox" id="ling-1m"  onchange="buildLingTable();validateStep()"> 1m</label>
-            <label class="checkbox-label"><input type="checkbox" id="ling-2m"  onchange="buildLingTable();validateStep()"> 2m</label>
-            <label class="checkbox-label"><input type="checkbox" id="ling-36m" onchange="buildLingTable();validateStep()"> 3–6m</label>
+            <label class="checkbox-label"><input type="checkbox" id="ling-1m"  onchange="saveLingResults();buildLingTable();validateStep()"> 1m</label>
+            <label class="checkbox-label"><input type="checkbox" id="ling-2m"  onchange="saveLingResults();buildLingTable();validateStep()"> 2m</label>
+            <label class="checkbox-label"><input type="checkbox" id="ling-36m" onchange="saveLingResults();buildLingTable();validateStep()"> 3–6m</label>
           </div>
         </div>
         <div id="ling-table-container"></div>
@@ -807,10 +915,10 @@ function renderConclusions() {
       <label>Conclusión</label>
       <select id="conclusion-value">
         <option value="">— Selecciona —</option>
-        <option value="CONCLUSION_1">[Placeholder conclusión 1 — pendiente equipo Product]</option>
-        <option value="CONCLUSION_2">[Placeholder conclusión 2 — pendiente equipo Product]</option>
-        <option value="CONCLUSION_3">[Placeholder conclusión 3 — pendiente equipo Product]</option>
-        <option value="CONCLUSION_4">[Placeholder conclusión 4 — pendiente equipo Product]</option>
+        <option value="CONCLUSION_1">No necesita audífonos</option>
+        <option value="CONCLUSION_2">Necesitaría audífonos pero los rechaza</option>
+        <option value="CONCLUSION_3">Ha iniciado la prueba de audífonos</option>
+        <option value="CONCLUSION_4">Ha adquirido los audífonos</option>
       </select>
     </div>
     <label class="checkbox-label" style="margin-bottom:14px">
@@ -835,6 +943,77 @@ function renderFinalNotes() {
       La fórmula de cierre estándar [PLACEHOLDER — pendiente equipo Product] y la firma del profesional se añadirán automáticamente.
     </div>
   </div>`;
+}
+
+function renderPreview() {
+  return `<div class="card" style="padding:0;overflow:hidden">
+    <div class="preview-header">
+      <div>
+        <div class="preview-header-title">Vista previa del informe</div>
+        <div class="preview-header-sub">Revisa el informe antes de descargarlo en PDF</div>
+      </div>
+    </div>
+    <div id="preview-loading" class="preview-loading">
+      <div class="spinner"></div>
+      Generando vista previa…
+    </div>
+    <iframe id="preview-iframe" style="display:none"></iframe>
+  </div>`;
+}
+
+async function loadPreview() {
+  document.getElementById('global-error').style.display = 'none';
+  const { payload, errs } = collectPayload();
+  if (errs.length) {
+    const el = document.getElementById('global-error');
+    el.innerHTML = errs.map(e => `• ${e}`).join('<br>');
+    el.style.display = 'block';
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const loading = document.getElementById('preview-loading');
+    if (loading) loading.style.display = 'none';
+    return;
+  }
+
+  try {
+    const r = await apiFetch('/api/reports', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'text/html' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!r.ok) {
+      const err = await r.json().catch(() => ({ error: r.statusText }));
+      const el = document.getElementById('global-error');
+      el.textContent = JSON.stringify(err.details || err.error, null, 2);
+      el.style.display = 'block';
+      const loading = document.getElementById('preview-loading');
+      if (loading) loading.style.display = 'none';
+      return;
+    }
+
+    const html = await r.text();
+    const iframe  = document.getElementById('preview-iframe');
+    const loading = document.getElementById('preview-loading');
+    if (!iframe) return;
+
+    iframe.onload = () => {
+      if (loading) loading.style.display = 'none';
+      iframe.style.display = 'block';
+      // auto-size to content
+      try {
+        const h = iframe.contentDocument?.body?.scrollHeight;
+        if (h && h > 400) iframe.style.height = (h + 40) + 'px';
+      } catch (_) {}
+    };
+    const blob = new Blob([html], { type: 'text/html' });
+    iframe.src = URL.createObjectURL(blob);
+  } catch (e) {
+    const el = document.getElementById('global-error');
+    el.textContent = 'Error al cargar la vista previa: ' + e.message;
+    el.style.display = 'block';
+    const loading = document.getElementById('preview-loading');
+    if (loading) loading.style.display = 'none';
+  }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -882,6 +1061,22 @@ function loadCosiNeeds(resetFromSF) {
     el.addEventListener('input', validateStep);
   });
 }
+/** Salva lo stato attuale dei checkbox Ling in STATE prima di ricostruire la tabella. */
+function saveLingResults() {
+  const sounds = ['/m/','/u/','/a/','/i/','/sh/','/s/'];
+  const dists = [];
+  if (document.getElementById('ling-1m')?.checked)  dists.push('1m');
+  if (document.getElementById('ling-2m')?.checked)  dists.push('2m');
+  if (document.getElementById('ling-36m')?.checked) dists.push('3-6m');
+  sounds.forEach(s => {
+    if (!STATE.ling_results[s]) STATE.ling_results[s] = {};
+    dists.forEach(d => {
+      const key = `ling-${s.replace(/\//g,'')}-${d}`;
+      const el = document.getElementById(key);
+      if (el) STATE.ling_results[s][d] = el.checked;
+    });
+  });
+}
 function buildLingTable() {
   const dists = [];
   if (document.getElementById('ling-1m')?.checked)  dists.push('1m');
@@ -894,9 +1089,11 @@ function buildLingTable() {
   const headers = dists.map(d=>`<th>${d}</th>`).join('');
   const rows = sounds.map(s => {
     const k = s.replace(/\//g,'');
-    const cells = dists.map(d =>
-      `<td><input type="checkbox" id="ling-${k}-${d}"></td>`
-    ).join('');
+    const cells = dists.map(d => {
+      // Restore previous value from STATE when rebuilding the table
+      const checked = STATE.ling_results[s]?.[d] ? ' checked' : '';
+      return `<td><input type="checkbox" id="ling-${k}-${d}"${checked}></td>`;
+    }).join('');
     return `<tr><td class="sound">${s}</td>${cells}</tr>`;
   }).join('');
   container.innerHTML = `
